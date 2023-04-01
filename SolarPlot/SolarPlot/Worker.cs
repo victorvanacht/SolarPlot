@@ -53,7 +53,9 @@ namespace SolarPlot
         private void Parse(string command)
         {
             var commandElements = command.Split(' ');
-            switch (commandElements[0].ToUpper())
+            commandElements[0].ToUpper();
+            SetStatus(commandElements[0]);
+            switch (commandElements[0])
             {
                 case "LOADCSV":
                     SetStatus("Loading CSV");
