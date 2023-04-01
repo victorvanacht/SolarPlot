@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SolarPlot
 {
-    internal class Worker
+    internal partial class Worker
     {
         public volatile bool workerShouldClose;
         public volatile bool workerHasClosed;
@@ -22,6 +22,7 @@ namespace SolarPlot
         {
             this.form = form;
             this.commandQueue = new List<string>();
+            InitializeParser();
 
             this.workerShouldClose = false;
             this.workerHasClosed = false;
@@ -48,23 +49,6 @@ namespace SolarPlot
             }
             workerHasClosed = true;
 
-        }
-
-        private void Parse(string command)
-        {
-            var commandElements = command.Split(' ');
-            commandElements[0].ToUpper();
-            SetStatus(commandElements[0]);
-            switch (commandElements[0])
-            {
-                case "LOADCSV":
-                    SetStatus("Loading CSV");
-                    SetProgressBar(100);
-                    break;
-                default:
-
-                    break;
-            }
         }
 
         private void SetStatus(string status)

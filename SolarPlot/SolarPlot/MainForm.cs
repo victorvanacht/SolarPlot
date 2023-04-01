@@ -12,12 +12,46 @@ namespace SolarPlot
 {
     public partial class MainForm : Form
     {
+        public class DataSet
+        {
+            public double[] timestamps;
+            public double[] power;
+            public int count;
+
+            public DataSet()
+            {
+                this.timestamps = new double[1000];
+                this.power = new double[1000];
+                this.count = 0;
+            }
+
+            public void Add(DateTime dateTime, float power)
+            {
+                if (count == timestamps.Length)
+                {
+                    Array.Resize(ref this.timestamps, this.count * 2);
+                    Array.Resize(ref this.power, this.count * 2);
+                }
+                this.timestamps[count] = dateTime.ToOADate();
+                this.power[count] = power;
+                count++;
+            }
+        }
+
+
+        public DataSet data;
+
+
+
+
+
         private Worker worker;
 
         public MainForm()
         {
             InitializeComponent();
 
+            this.data = new DataSet();
             this.worker = new Worker(this);
 
             if (Properties.Settings.Default.OpenFile != "")
@@ -34,6 +68,18 @@ namespace SolarPlot
             else
             {
                 this.toolStripStatusLabel1.Text = status;
+            }
+        }
+
+        public void SetErrorStatus(string error)
+        {
+            if (this.statusStrip.InvokeRequired)
+            {
+                this.statusStrip.Invoke((Action)delegate { SetStatus(error); });
+            }
+            else
+            {
+                this.toolStripStatusLabel2.Text = error;
             }
         }
 
