@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Globalization;
 using static ScottPlot.Plottable.PopulationPlot;
+using static SolarPlot.Worker.LoadCSV;
 
 namespace SolarPlot
 {
@@ -17,9 +18,10 @@ namespace SolarPlot
         private void InitializeParser()
         {
             this.commands = new Dictionary<string, ParsersBase>
-        {
-            ["LOADCSV"] = new LoadCSV(this.form)
-        };
+            {
+                ["LOADCSV"] = new LoadCSV(this.form),
+                ["PLOTINIT"] = new PlotInit(this.form),
+            };
         }
 
 
@@ -92,7 +94,7 @@ namespace SolarPlot
                                 this.form.SetProgress((int)((position * 100) / fileSize));
 
                                 DateTime datetime = DateTime.Parse(line[indexDateTime], CultureInfo.InvariantCulture);
-                                float power = float.Parse(line[indexPower], CultureInfo.InvariantCulture);
+                                double power = double.Parse(line[indexPower], CultureInfo.InvariantCulture);
 
                                 this.form.data.Add(datetime, power);
                             }
@@ -109,6 +111,17 @@ namespace SolarPlot
                     this.form.SetErrorStatus("File not found.");
                 }
             }
+
+            public class PlotInit : ParsersBase
+            {
+                public PlotInit(MainForm form) : base(form) { }
+
+                override public void Parse(string[] commandItems)
+                {
+                    this.form.PlotInit();
+                }
+            }
+
         }
     }
 }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.MaxFormsPlot = new ScottPlot.FormsPlot();
+            this.PlotDay = new ScottPlot.FormsPlot();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageDay = new System.Windows.Forms.TabPage();
             this.tabPageYear = new System.Windows.Forms.TabPage();
@@ -36,29 +36,29 @@
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.tabControl.SuspendLayout();
             this.tabPageDay.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // MaxFormsPlot
+            // PlotDay
             // 
-            this.MaxFormsPlot.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.PlotDay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.MaxFormsPlot.Location = new System.Drawing.Point(17, 17);
-            this.MaxFormsPlot.Margin = new System.Windows.Forms.Padding(0);
-            this.MaxFormsPlot.Name = "MaxFormsPlot";
-            this.MaxFormsPlot.Size = new System.Drawing.Size(944, 339);
-            this.MaxFormsPlot.TabIndex = 34;
+            this.PlotDay.Location = new System.Drawing.Point(17, 17);
+            this.PlotDay.Margin = new System.Windows.Forms.Padding(0);
+            this.PlotDay.Name = "PlotDay";
+            this.PlotDay.Size = new System.Drawing.Size(944, 339);
+            this.PlotDay.TabIndex = 34;
             // 
             // tabControl
             // 
@@ -76,7 +76,7 @@
             // 
             // tabPageDay
             // 
-            this.tabPageDay.Controls.Add(this.MaxFormsPlot);
+            this.tabPageDay.Controls.Add(this.PlotDay);
             this.tabPageDay.Location = new System.Drawing.Point(4, 22);
             this.tabPageDay.Name = "tabPageDay";
             this.tabPageDay.Padding = new System.Windows.Forms.Padding(3);
@@ -128,9 +128,16 @@
             // openCSVToolStripMenuItem
             // 
             this.openCSVToolStripMenuItem.Name = "openCSVToolStripMenuItem";
-            this.openCSVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openCSVToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
             this.openCSVToolStripMenuItem.Text = "Open CSV";
             this.openCSVToolStripMenuItem.Click += new System.EventHandler(this.openCSVToolStripMenuItem_Click);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.exitToolStripMenuItem.Text = "Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.Exit);
             // 
             // helpToolStripMenuItem
             // 
@@ -143,7 +150,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -169,11 +176,6 @@
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(200, 17);
             this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toolStripProgressBar
-            // 
-            this.toolStripProgressBar.Name = "toolStripProgressBar";
-            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
-            // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.AutoSize = false;
@@ -181,12 +183,10 @@
             this.toolStripStatusLabel2.Size = new System.Drawing.Size(300, 17);
             this.toolStripStatusLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // exitToolStripMenuItem
+            // toolStripProgressBar
             // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.Exit);
+            this.toolStripProgressBar.Name = "toolStripProgressBar";
+            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
             // MainForm
             // 
@@ -213,7 +213,7 @@
 
         #endregion
 
-        private ScottPlot.FormsPlot MaxFormsPlot;
+        private ScottPlot.FormsPlot PlotDay;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageDay;
         private System.Windows.Forms.TabPage tabPageYear;

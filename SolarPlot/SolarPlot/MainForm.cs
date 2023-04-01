@@ -1,7 +1,9 @@
-﻿using System;
+﻿using ScottPlot;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,49 +16,102 @@ namespace SolarPlot
     {
         public class DataSet
         {
-            public double[] timestamps;
-            public double[] power;
-            public int count;
-
-            public DataSet()
+            public class Line
             {
-                this.timestamps = new double[1000];
-                this.power = new double[1000];
-                this.count = 0;
-            }
+                private FormsPlot plot;
+                private double[] xData;
+                private double[] yData;
+                private string name;
+                private Color color;
+                private int count;
 
-            public void Add(DateTime dateTime, float power)
-            {
-                if (count == timestamps.Length)
+                private ScottPlot.Plottable.SignalPlotXY line;
+
+                public Line(FormsPlot plot, string name, double[] xData, double[] yData, Color color)
                 {
-                    Array.Resize(ref this.timestamps, this.count * 2);
-                    Array.Resize(ref this.power, this.count * 2);
-                }
-                this.timestamps[count] = dateTime.ToOADate();
-                this.power[count] = power;
-                count++;
-            }
-        }
+                    this.plot = plot;
+                    this.name = name;
+                    this.xData = xData;
+                    this.yData = yData;
+                    this.color = color;
+                    this.count = 0;
 
+                    this.line = this.plot.Plot.AddSignalXY(this.xData, this.yData, this.color, this.name);
+                    this.line.MarkerSize = 0;
+                    this.line.Color = color;
+                }
+
+                public void AddPoint(DateTime dateTime, double value)
+                {
+                    if (this.count == xData.Length)
+                    {
+                        Array.Resize(ref this.xData, this.count * 2);
+                        Array.Resize(ref this.yData, this.count * 2);
+                    }
+                    this.xData[count] = dateTime.ToOADate();
+                    this.yData[count] = value;
+                    this.count++;
+
+                }
+
+                public void AutoRangeXAxis()
+                {
+                    this.plot.Plot.SetAxisLimits(xMin: xData[0], xMax: xData[this.count - 1]);
+                }
+
+                public void AutoRangeYAxis()
+                {
+                    this.plot.Plot.SetAxisLimits(yMin: yData.Min(), yMax: yData.Max());
+                }
+
+            }
+
+            public Dictionary<string, Line> dayLines;
+
+            private MainForm form;
+
+            public DataSet(MainForm form)
+            {
+                this.form = form;
+
+                this.dayLines = new Dictionary<string, Line>() 
+                {
+                    ["power"] = new Line(this.form.PlotDay, "Power", new double[1000], new double[1000], Color.Blue)
+                };
+            }
+
+            public void Add(DateTime dateTime, double power)
+            {
+                dayLines["power"].AddPoint(dateTime, power);
+            }
+            public void AutoRangeXAxis()
+            {
+                dayLines["power"].AutoRangeXAxis();
+            }
+
+            public void AutoRangeYAxis(string item)
+            {
+                dayLines[item].AutoRangeYAxis();
+            }
+
+        }
 
         public DataSet data;
 
-
-
-
-
         private Worker worker;
+        private ScottPlot.Renderable.Legend PlotDaylegend;
 
         public MainForm()
         {
             InitializeComponent();
 
-            this.data = new DataSet();
+            this.data = new DataSet(this);
             this.worker = new Worker(this);
 
             if (Properties.Settings.Default.OpenFile != "")
             {
                 this.worker.Command("LoadCSV " + Properties.Settings.Default.OpenFile);
+                this.worker.Command("PlotInit");
             }
         }
         public void SetStatus(string status)
@@ -95,6 +150,26 @@ namespace SolarPlot
             }
         }
 
+        public void PlotInit()
+        {
+            if (this.PlotDay.InvokeRequired)
+            {
+                this.PlotDay.Invoke((Action)delegate { PlotInit(); });
+            }
+            else
+            {
+                this.PlotDay.Plot.XAxis.DateTimeFormat(true);
+                this.PlotDaylegend = this.PlotDay.Plot.Legend();
+                this.PlotDaylegend.Orientation = ScottPlot.Orientation.Vertical;
+                this.PlotDaylegend.Location = ScottPlot.Alignment.UpperLeft;
+                this.PlotDaylegend.FontSize = 9;
+                this.PlotDay.Plot.XLabel("Date/Time");
+                this.data.AutoRangeXAxis();
+                this.data.AutoRangeYAxis("power");
+                this.PlotDay.Refresh();
+            }
+        }
+
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("SolarPlot\nProgrammed by Victor van Acht\n\nhttps://github.com/victorvanacht/SolarPlot");
@@ -111,6 +186,7 @@ namespace SolarPlot
             {
                 Properties.Settings.Default.OpenFile = openFileDialog.FileName;
                 this.worker.Command("LoadCSV " + openFileDialog.FileName);
+                this.worker.Command("PlotInit");
             }
         }
 
@@ -138,3 +214,4 @@ namespace SolarPlot
         }
     }
 }
+
