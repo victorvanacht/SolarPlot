@@ -8,6 +8,8 @@ using System.Runtime.InteropServices;
 using System.Globalization;
 using static ScottPlot.Plottable.PopulationPlot;
 using static SolarPlot.Worker.LoadCSV;
+using System.Data.Common;
+using System.Xml.Linq;
 
 namespace SolarPlot
 {
@@ -72,7 +74,7 @@ namespace SolarPlot
             {
                 if (File.Exists(commandItems[1]))
                 {
-                    form.data = new MainForm.DataSet(form);
+                    form.data = new MainForm.DataSet();
 
                     FileInfo fileInfo = new FileInfo(commandItems[1]);
                     Int64 fileSize = fileInfo.Length;
@@ -82,26 +84,22 @@ namespace SolarPlot
                         //first read heading
                         string[] heading = file.ReadLine().Split(',');
 
-                        int indexDateTime = FindInStringArray(heading, "TimeStamp");
-                        int indexPower = FindInStringArray(heading, "Power");
-                        int indexIac1 = FindInStringArray(heading, "Iac1");
-                        int indexIac2 = FindInStringArray(heading, "Iac2");
-                        int indexIac3 = FindInStringArray(heading, "Iac3");
-                        int indexVac1 = FindInStringArray(heading, "Vac1");
-                        int indexVac2 = FindInStringArray(heading, "Vac2");
-                        int indexVac3 = FindInStringArray(heading, "Vac3");
-                        int indexFreq1 = FindInStringArray(heading, "Freq1");
-                        int indexFreq2 = FindInStringArray(heading, "Freq2");
-                        int indexFreq3 = FindInStringArray(heading, "Freq3");
-                        int indexIpv1 = FindInStringArray(heading, "Ipv1");
-                        int indexIpv2 = FindInStringArray(heading, "Ipv2");
-                        int indexVpv1 = FindInStringArray(heading, "Vpv1");
-                        int indexVpv2 = FindInStringArray(heading, "Vpv2");
-                        int indexTemperature = FindInStringArray(heading, "Temperature");
+                        int columnIndexTimeStamp = FindInStringArray(heading, "TimeStamp");
+                        string[] columnNames = {"Power", "Iac1", "Iac2", "Iac3", "Vac1", "Vac2", "Vac3", "Freq1", "Freq2", "Freq3", "Ipv1", "Ipv2", "Vpv1", "Vpv2", "Temperature" };
+                        Dictionary<string, int> columnIndex = new Dictionary<string, int>();
 
-                        if ((indexDateTime >=0) && (indexPower>=0))
+                        foreach (string name in columnNames)
                         {
+                            int column = FindInStringArray(heading, name);
+                            if (column >= 0)
+                            {
+                                columnIndex.Add(name, column);
+                                form.data += name;
+                            }
+                        }
 
+                        if ((columnIndexTimeStamp >= 0) && (columnIndex["Power"] >=0))
+                        {
                             DateTime previousDateTime = new DateTime();
                             while (!file.EndOfStream)
                             {
@@ -110,29 +108,13 @@ namespace SolarPlot
                                 Int64 position = file.BaseStream.Position;
                                 this.form.SetProgress((int)((position * 100) / fileSize));
 
-                                DateTime datetime = DateTime.Parse(line[indexDateTime], CultureInfo.InvariantCulture);
-                                double power = double.Parse(line[indexPower], CultureInfo.InvariantCulture);
-
-                                double Iac1 = (indexIac1 >= 0)? double.Parse(line[indexIac1], CultureInfo.InvariantCulture) : 0;
-                                double Iac2 = (indexIac2 >= 0) ? double.Parse(line[indexIac2], CultureInfo.InvariantCulture) : 0;
-                                double Iac3 = (indexIac3 >= 0) ? double.Parse(line[indexIac3], CultureInfo.InvariantCulture) : 0;
-                                double Vac1 = (indexVac1 >= 0) ? double.Parse(line[indexVac1], CultureInfo.InvariantCulture) : 0;
-                                double Vac2 = (indexVac2 >= 0) ? double.Parse(line[indexVac2], CultureInfo.InvariantCulture) : 0;
-                                double Vac3 = (indexVac3 >= 0) ? double.Parse(line[indexVac3], CultureInfo.InvariantCulture) : 0;
-                                double freq1 = (indexFreq1 >= 0) ? double.Parse(line[indexFreq1], CultureInfo.InvariantCulture) : 0;
-                                double freq2 = (indexFreq2 >= 0) ? double.Parse(line[indexFreq2], CultureInfo.InvariantCulture) : 0;
-                                double freq3 = (indexFreq3 >= 0) ? double.Parse(line[indexFreq3], CultureInfo.InvariantCulture) : 0;
-                                double Ipv1 = (indexIpv1 >= 0) ? double.Parse(line[indexIpv1], CultureInfo.InvariantCulture) : 0;
-                                double Ipv2 = (indexIpv2 >= 0) ? double.Parse(line[indexIpv2], CultureInfo.InvariantCulture) : 0;
-                                double Vpv1 = (indexVpv1 >= 0) ? double.Parse(line[indexVpv1], CultureInfo.InvariantCulture) : 0;
-                                double Vpv2 = (indexVpv2 >= 0) ? double.Parse(line[indexVpv2], CultureInfo.InvariantCulture) : 0;
-                                double temperature = (indexTemperature >= 0) ? double.Parse(line[indexTemperature], CultureInfo.InvariantCulture) : 0;
-
-
-
+                                DateTime datetime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
                                 if (datetime > previousDateTime) // make sure we only have ascending date times
-                                {
-                                    this.form.data.Add(datetime, power, Iac1, Iac2, Iac3, Vac1, Vac2, Vac3, freq1, freq2, freq3, Ipv1, Ipv2, Vpv1, Vpv2, temperature);
+                                { 
+                                    foreach (KeyValuePair<string,int> kvp in columnIndex)
+                                    {
+                                        form.data[kvp.Key] += new MainForm.DataSet.Point(datetime.ToOADate(), double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
+                                    }
                                     previousDateTime = datetime;
                                 }
                             }

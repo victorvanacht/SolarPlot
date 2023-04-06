@@ -31,6 +31,12 @@
             this.PlotDay = new ScottPlot.FormsPlot();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageDay = new System.Windows.Forms.TabPage();
+            this.DayCheckBoxTemp = new System.Windows.Forms.CheckBox();
+            this.DayCheckBoxFac = new System.Windows.Forms.CheckBox();
+            this.DayCheckBoxIpv = new System.Windows.Forms.CheckBox();
+            this.DayCheckBoxVpv = new System.Windows.Forms.CheckBox();
+            this.DayCheckBoxIac = new System.Windows.Forms.CheckBox();
+            this.DayCheckBoxVac = new System.Windows.Forms.CheckBox();
             this.tabPageYear = new System.Windows.Forms.TabPage();
             this.tabPageDecade = new System.Windows.Forms.TabPage();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
@@ -54,10 +60,10 @@
             this.PlotDay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PlotDay.Location = new System.Drawing.Point(17, 17);
+            this.PlotDay.Location = new System.Drawing.Point(3, 3);
             this.PlotDay.Margin = new System.Windows.Forms.Padding(0);
             this.PlotDay.Name = "PlotDay";
-            this.PlotDay.Size = new System.Drawing.Size(944, 339);
+            this.PlotDay.Size = new System.Drawing.Size(968, 419);
             this.PlotDay.TabIndex = 34;
             // 
             // tabControl
@@ -76,6 +82,12 @@
             // 
             // tabPageDay
             // 
+            this.tabPageDay.Controls.Add(this.DayCheckBoxTemp);
+            this.tabPageDay.Controls.Add(this.DayCheckBoxFac);
+            this.tabPageDay.Controls.Add(this.DayCheckBoxIpv);
+            this.tabPageDay.Controls.Add(this.DayCheckBoxVpv);
+            this.tabPageDay.Controls.Add(this.DayCheckBoxIac);
+            this.tabPageDay.Controls.Add(this.DayCheckBoxVac);
             this.tabPageDay.Controls.Add(this.PlotDay);
             this.tabPageDay.Location = new System.Drawing.Point(4, 22);
             this.tabPageDay.Name = "tabPageDay";
@@ -84,6 +96,77 @@
             this.tabPageDay.TabIndex = 0;
             this.tabPageDay.Text = "Day";
             this.tabPageDay.UseVisualStyleBackColor = true;
+            // 
+            // DayCheckBoxTemp
+            // 
+            this.DayCheckBoxTemp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DayCheckBoxTemp.Location = new System.Drawing.Point(251, 431);
+            this.DayCheckBoxTemp.Name = "DayCheckBoxTemp";
+            this.DayCheckBoxTemp.Size = new System.Drawing.Size(104, 24);
+            this.DayCheckBoxTemp.TabIndex = 40;
+            this.DayCheckBoxTemp.Text = "Temp";
+            this.DayCheckBoxTemp.UseVisualStyleBackColor = true;
+            this.DayCheckBoxTemp.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            // 
+            // DayCheckBoxFac
+            // 
+            this.DayCheckBoxFac.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DayCheckBoxFac.AutoSize = true;
+            this.DayCheckBoxFac.Location = new System.Drawing.Point(201, 435);
+            this.DayCheckBoxFac.Name = "DayCheckBoxFac";
+            this.DayCheckBoxFac.Size = new System.Drawing.Size(44, 17);
+            this.DayCheckBoxFac.TabIndex = 39;
+            this.DayCheckBoxFac.Text = "Fac";
+            this.DayCheckBoxFac.UseVisualStyleBackColor = true;
+            this.DayCheckBoxFac.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            // 
+            // DayCheckBoxIpv
+            // 
+            this.DayCheckBoxIpv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DayCheckBoxIpv.AutoSize = true;
+            this.DayCheckBoxIpv.Location = new System.Drawing.Point(62, 435);
+            this.DayCheckBoxIpv.Name = "DayCheckBoxIpv";
+            this.DayCheckBoxIpv.Size = new System.Drawing.Size(41, 17);
+            this.DayCheckBoxIpv.TabIndex = 38;
+            this.DayCheckBoxIpv.Text = "Ipv";
+            this.DayCheckBoxIpv.UseVisualStyleBackColor = true;
+            this.DayCheckBoxIpv.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            // 
+            // DayCheckBoxVpv
+            // 
+            this.DayCheckBoxVpv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DayCheckBoxVpv.AutoSize = true;
+            this.DayCheckBoxVpv.Location = new System.Drawing.Point(11, 435);
+            this.DayCheckBoxVpv.Name = "DayCheckBoxVpv";
+            this.DayCheckBoxVpv.Size = new System.Drawing.Size(45, 17);
+            this.DayCheckBoxVpv.TabIndex = 37;
+            this.DayCheckBoxVpv.Text = "Vpv";
+            this.DayCheckBoxVpv.UseVisualStyleBackColor = true;
+            this.DayCheckBoxVpv.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            // 
+            // DayCheckBoxIac
+            // 
+            this.DayCheckBoxIac.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DayCheckBoxIac.AutoSize = true;
+            this.DayCheckBoxIac.Location = new System.Drawing.Point(154, 435);
+            this.DayCheckBoxIac.Name = "DayCheckBoxIac";
+            this.DayCheckBoxIac.Size = new System.Drawing.Size(41, 17);
+            this.DayCheckBoxIac.TabIndex = 36;
+            this.DayCheckBoxIac.Text = "Iac";
+            this.DayCheckBoxIac.UseVisualStyleBackColor = true;
+            this.DayCheckBoxIac.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            // 
+            // DayCheckBoxVac
+            // 
+            this.DayCheckBoxVac.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DayCheckBoxVac.AutoSize = true;
+            this.DayCheckBoxVac.Location = new System.Drawing.Point(103, 435);
+            this.DayCheckBoxVac.Name = "DayCheckBoxVac";
+            this.DayCheckBoxVac.Size = new System.Drawing.Size(45, 17);
+            this.DayCheckBoxVac.TabIndex = 35;
+            this.DayCheckBoxVac.Text = "Vac";
+            this.DayCheckBoxVac.UseVisualStyleBackColor = true;
+            this.DayCheckBoxVac.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
             // 
             // tabPageYear
             // 
@@ -202,6 +285,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormExit_Click);
             this.tabControl.ResumeLayout(false);
             this.tabPageDay.ResumeLayout(false);
+            this.tabPageDay.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
@@ -228,6 +312,12 @@
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.CheckBox DayCheckBoxVac;
+        private System.Windows.Forms.CheckBox DayCheckBoxIpv;
+        private System.Windows.Forms.CheckBox DayCheckBoxVpv;
+        private System.Windows.Forms.CheckBox DayCheckBoxIac;
+        private System.Windows.Forms.CheckBox DayCheckBoxTemp;
+        private System.Windows.Forms.CheckBox DayCheckBoxFac;
     }
 }
 
