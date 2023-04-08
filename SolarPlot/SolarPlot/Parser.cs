@@ -10,6 +10,7 @@ using static ScottPlot.Plottable.PopulationPlot;
 using static SolarPlot.Worker.LoadCSV;
 using System.Data.Common;
 using System.Xml.Linq;
+using ScottPlot;
 
 namespace SolarPlot
 {
@@ -46,10 +47,12 @@ namespace SolarPlot
         public class ParsersBase
         {
             protected MainForm form;
+            protected XYDataSet dataSet;
 
             public ParsersBase(MainForm form)
             {
                 this.form = form;
+                this.dataSet = form.dataSet;
             }
 
             virtual public void Parse(string[] commandItems) { }
@@ -74,7 +77,7 @@ namespace SolarPlot
             {
                 if (File.Exists(commandItems[1]))
                 {
-                    form.data = new MainForm.DataSet();
+                    this.dataSet.Clear();
 
                     FileInfo fileInfo = new FileInfo(commandItems[1]);
                     Int64 fileSize = fileInfo.Length;
@@ -94,7 +97,7 @@ namespace SolarPlot
                             if (column >= 0)
                             {
                                 columnIndex.Add(name, column);
-                                form.data += name;
+                                this.dataSet += name;
                             }
                         }
 
@@ -108,16 +111,17 @@ namespace SolarPlot
                                 Int64 position = file.BaseStream.Position;
                                 this.form.SetProgress((int)((position * 100) / fileSize));
 
-                                DateTime datetime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
-                                if (datetime > previousDateTime) // make sure we only have ascending date times
+                                DateTime dateTime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
+                                if (dateTime > previousDateTime) // make sure we only have ascending date times
                                 { 
                                     foreach (KeyValuePair<string,int> kvp in columnIndex)
                                     {
-                                        form.data[kvp.Key] += new MainForm.DataSet.Point(datetime.ToOADate(), double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
+                                        this.dataSet[kvp.Key] += new XYDataSet.XYPoint(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
                                     }
-                                    previousDateTime = datetime;
+                                    previousDateTime = dateTime;
                                 }
                             }
+                            this.dataSet.FillRemainingXAxis();
                             this.form.SetProgress(0);
                         }
                         else

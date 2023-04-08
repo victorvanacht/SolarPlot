@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Styles;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -12,124 +13,41 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
 using static ScottPlot.Generate;
-using static SolarPlot.MainForm.DataSet;
+using static SolarPlot.XYDataSet;
 
 namespace SolarPlot
 {
     public partial class MainForm : Form
     {
-        public class DataSet
+
+        internal class DayPlot
         {
-            public class Point
+            internal class Line
             {
-                public double x;
-                public double y;
+                private FormsPlot plot;
+                private double[] xData;
+                private double[] yData;
+                private string name;
+                private Color color;
+                private Color fillColor;
+                private bool fill;
+                private int axisIndex;
+                private int count;
 
-                public Point(double x, double y)
+                private ScottPlot.Plottable.SignalPlotXY line;
+
+                public Line(ScottPlot.FormsPlot plot, string name, double[] xData, double[] yData, Color lineColor, Color fillColor, bool fill, int axisIndex)
                 {
-                    this.x = x;
-                    this.y = y;
-                }
-            }
+                    this.plot = plot;
+                    this.name = name;
+                    this.xData = xData;
+                    this.yData = yData;
+                    this.color = lineColor;
+                    this.fillColor = fillColor;
+                    this.fill = fill;
+                    this.axisIndex = axisIndex;
+                    this.count = 0;
 
-            public class XYData
-            {
-                public double[] x;
-                public double[] y;
-                public int count;
-
-                public XYData() : this(1000) { }
-                public XYData(int initialSize)
-                {
-                    this.x = new double[initialSize];
-                    this.y = new double[initialSize];
-                    count = 0;
-                }
-
-                public static XYData operator +(XYData xyData, Point point)
-                {
-                    if (xyData.count == xyData.x.Length)
-                    {
-                        int count2 = xyData.count * 2;
-                        Array.Resize(ref xyData.x, count2);
-                        Array.Resize(ref xyData.y, count2);
-                    }
-                    xyData.x[xyData.count] = point.x;
-                    xyData.y[xyData.count] = point.y;
-                    xyData.count++;
-
-                    return xyData;
-                }
-                public static XYData operator +(Point point, XYData xyData)
-                {
-                    return xyData + point;
-                }
-
-                // fill remaining x-as with reasonable data, to prevent ScottPlot giving an error
-                public void FillRemainingXAxis()
-                {
-                    double step = (x[this.count - 1] - x[0]) / (count - 1);
-                    for (int i = count; i < x.Length; i++)
-                    {
-                        x[i] = x[0] + i * step;
-                    }
-                }
-
-                public double GetMinX()
-                {
-                    return x[0];
-                }
-
-                public double GetMaxX()
-                {
-                    return x[this.count - 1];
-                }
-
-                public double GetMinY()
-                {
-                    return y.Min();
-                }
-
-                public double GetMaxY()
-                {
-                    return y.Max();
-                }
-            }
-
-            private Dictionary<string, XYData> dataSet;
-
-            public DataSet()
-            {
-                this.dataSet = new Dictionary<string, XYData>();
-            }
-
-            public static DataSet operator +(DataSet dataSet, string name)
-            {
-                dataSet.dataSet.Add(name, new XYData());
-                return dataSet;
-            }
-            public static DataSet operator +(string name, DataSet dataSet)
-            {
-                return dataSet + name;
-            }
-
-            public XYData this[string index]
-            {
-                get
-                {
-                    return this.dataSet[index];
-                }
-                set
-                {
-                    this.dataSet[index] = value;
-                }
-            }
-
-
-            /*
-
-                private void AddLine()
-                {
                     this.line = this.plot.Plot.AddSignalXY(this.xData, this.yData, this.color, this.name);
                     this.line.LineWidth = 2;
                     this.line.MarkerSize = 0;
@@ -141,7 +59,47 @@ namespace SolarPlot
                 }
             }
 
-            public Dictionary<string, Line> dayLines;
+
+
+            XYDataSet dataSet;
+            ScottPlot.FormsPlot plot;
+            public Dictionary<string, Line> lines;
+            private ScottPlot.Renderable.Legend legend;
+
+            public DayPlot(XYDataSet dataSet, ScottPlot.FormsPlot plot)
+            {
+                this.dataSet = dataSet;
+                this.plot = plot;
+
+                this.lines = new Dictionary<string, Line>();
+
+                foreach (KeyValuePair<string, XYData> kvp in dataSet)
+                {
+                    string name = kvp.Key;
+
+
+                    lines.Add(name, new Line(plot, name, kvp.Value.x, kvp.Value.y, Color.Blue, Color.Blue, false, 0));
+
+
+                }
+                this.plot.Plot.XAxis.DateTimeFormat(true);
+                this.legend = this.plot.Plot.Legend();
+                this.legend.Orientation = ScottPlot.Orientation.Vertical;
+                this.legend.Location = ScottPlot.Alignment.UpperLeft;
+                this.legend.FontSize = 9;
+                this.plot.Plot.XLabel("Date/Time");
+                //this.data.AutoRangeXAxis();
+                //this.data.AutoRangeY0Axis();
+                //this.data.AutoRangeY1Axis(new string[] { "Vac1", "Vac1", "Vac3" });
+                this.plot.Configuration.LockVerticalAxis = true;
+                this.plot.Refresh();
+            }
+        }
+
+        private DayPlot dayPlot;
+            /*
+
+            
 
             private MainForm form;
 
@@ -243,56 +201,25 @@ namespace SolarPlot
             }
 
         */
-        }
 
         /*
         public class DayPlot
         {
             public DayPlot() { }
 
-        public class Line
-        {
-            private FormsPlot plot;
-            private double[] xData;
-            private double[] yData;
-            private string name;
-            private Color color;
-            private Color fillColor;
-            private bool fill;
-            private int axisIndex;
-            private int count;
-
-            private ScottPlot.Plottable.SignalPlotXY line;
-
-            public Line(FormsPlot plot, string name, double[] xData, double[] yData, Color lineColor, Color fillColor, bool fill, int axisIndex)
-            {
-                this.plot = plot;
-                this.name = name;
-                this.xData = xData;
-                this.yData = yData;
-                this.color = lineColor;
-                this.fillColor = fillColor;
-                this.fill = fill;
-                this.axisIndex = axisIndex;
-                this.count = 0;
-
-                AddLine();
-            }
-
-        }
+        
 
         */
 
-        public DataSet data;
+        internal XYDataSet dataSet;
 
         private Worker worker;
-        private ScottPlot.Renderable.Legend PlotDaylegend;
 
         public MainForm()
         {
             InitializeComponent();
 
-            this.data = new DataSet();
+            this.dataSet = new XYDataSet();
             this.worker = new Worker(this);
 
             if (Properties.Settings.Default.OpenFile != "")
@@ -339,26 +266,14 @@ namespace SolarPlot
 
         public void PlotInit()
         {
-            /*
-            if (this.PlotDay.InvokeRequired)
+            if (this.PlotDayGraph.InvokeRequired)
             {
-                this.PlotDay.Invoke((Action)delegate { PlotInit(); });
+                this.PlotDayGraph.Invoke((Action)delegate { PlotInit(); });
             }
             else
             {
-                this.PlotDay.Plot.XAxis.DateTimeFormat(true);
-                this.PlotDaylegend = this.PlotDay.Plot.Legend();
-                this.PlotDaylegend.Orientation = ScottPlot.Orientation.Vertical;
-                this.PlotDaylegend.Location = ScottPlot.Alignment.UpperLeft;
-                this.PlotDaylegend.FontSize = 9;
-                this.PlotDay.Plot.XLabel("Date/Time");
-                this.data.AutoRangeXAxis();
-                this.data.AutoRangeY0Axis();
-                this.data.AutoRangeY1Axis(new string[] { "Vac1", "Vac1", "Vac3" });
-                this.PlotDay.Configuration.LockVerticalAxis = true;
-                this.PlotDay.Refresh();
+                this.dayPlot = new DayPlot(this.dataSet, this.PlotDayGraph);
             }
-            */
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)

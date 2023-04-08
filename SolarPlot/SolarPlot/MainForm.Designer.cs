@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.PlotDay = new ScottPlot.FormsPlot();
+            this.PlotDayGraph = new ScottPlot.FormsPlot();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageDay = new System.Windows.Forms.TabPage();
             this.DayCheckBoxTemp = new System.Windows.Forms.CheckBox();
@@ -55,16 +55,16 @@
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // PlotDay
+            // PlotDayGraph
             // 
-            this.PlotDay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.PlotDayGraph.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PlotDay.Location = new System.Drawing.Point(3, 3);
-            this.PlotDay.Margin = new System.Windows.Forms.Padding(0);
-            this.PlotDay.Name = "PlotDay";
-            this.PlotDay.Size = new System.Drawing.Size(968, 419);
-            this.PlotDay.TabIndex = 34;
+            this.PlotDayGraph.Location = new System.Drawing.Point(3, 3);
+            this.PlotDayGraph.Margin = new System.Windows.Forms.Padding(0);
+            this.PlotDayGraph.Name = "PlotDayGraph";
+            this.PlotDayGraph.Size = new System.Drawing.Size(968, 419);
+            this.PlotDayGraph.TabIndex = 34;
             // 
             // tabControl
             // 
@@ -88,7 +88,7 @@
             this.tabPageDay.Controls.Add(this.DayCheckBoxVpv);
             this.tabPageDay.Controls.Add(this.DayCheckBoxIac);
             this.tabPageDay.Controls.Add(this.DayCheckBoxVac);
-            this.tabPageDay.Controls.Add(this.PlotDay);
+            this.tabPageDay.Controls.Add(this.PlotDayGraph);
             this.tabPageDay.Location = new System.Drawing.Point(4, 22);
             this.tabPageDay.Name = "tabPageDay";
             this.tabPageDay.Padding = new System.Windows.Forms.Padding(3);
@@ -297,7 +297,7 @@
 
         #endregion
 
-        private ScottPlot.FormsPlot PlotDay;
+        private ScottPlot.FormsPlot PlotDayGraph;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage tabPageDay;
         private System.Windows.Forms.TabPage tabPageYear;
