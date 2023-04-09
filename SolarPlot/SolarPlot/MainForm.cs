@@ -1,4 +1,5 @@
 ﻿using ScottPlot;
+using ScottPlot.Renderable;
 using ScottPlot.Styles;
 using System;
 using System.CodeDom;
@@ -59,12 +60,47 @@ namespace SolarPlot
                 }
             }
 
+            private class LineProperty
+            {
+                public Color color;
+                public Color fillColor;
+                public bool fill;
+                public int axisIndex;
 
+                public LineProperty(Color color, Color fillColor, bool fill, int axisIndex)
+                {
+                    this.color = color;
+                    this.fillColor = fillColor;
+                    this.fill = fill;
+                    this.axisIndex = axisIndex;
+                }
+            }
 
             XYDataSet dataSet;
             ScottPlot.FormsPlot plot;
             public Dictionary<string, Line> lines;
             private ScottPlot.Renderable.Legend legend;
+            private Axis Yaxis2;
+
+            private Dictionary<string, LineProperty> lineProperties = new Dictionary<string, LineProperty>()
+            {
+                ["Power"] = new LineProperty(Color.Blue, Color.Blue, true, 0),
+                ["Iac1"]  = new LineProperty(Color.Red, Color.Red, false, 1),
+                ["Iac2"] = new LineProperty(Color.Green, Color.Green, false, 1),
+                ["Iac3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
+                ["Vac1"] = new LineProperty(Color.Red, Color.Red, false, 1),
+                ["Vac2"] = new LineProperty(Color.Green, Color.Green, false, 1),
+                ["Vac3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
+                ["Freq1"] = new LineProperty(Color.Red, Color.Red, false, 1),
+                ["Freq2"] = new LineProperty(Color.Green, Color.Green, false, 1),
+                ["Freq3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
+                ["Ipv1"] = new LineProperty(Color.Red, Color.Red, false, 1),
+                ["Ipv2"] = new LineProperty(Color.Green, Color.Green, false, 1),
+                ["Vpv1"] = new LineProperty(Color.Red, Color.Red, false, 1),
+                ["Vpv2"] = new LineProperty(Color.Green, Color.Green, false, 1),
+                ["Temperature"] = new LineProperty(Color.Purple, Color.Purple, false, 1),
+
+            };
 
             public DayPlot(XYDataSet dataSet, ScottPlot.FormsPlot plot)
             {
@@ -76,10 +112,8 @@ namespace SolarPlot
                 foreach (KeyValuePair<string, XYData<double>> kvp in dataSet)
                 {
                     string name = kvp.Key;
-
-
-                    lines.Add(name, new Line(plot, name, kvp.Value.x, kvp.Value.y, Color.Blue, Color.Blue, false, 0));
-
+                    LineProperty prop = lineProperties[name];
+                    lines.Add(name, new Line(plot, name, kvp.Value.x, kvp.Value.y, prop.color, prop.fillColor, prop.fill, prop.axisIndex));
 
                 }
                 this.plot.Plot.XAxis.DateTimeFormat(true);
@@ -88,11 +122,60 @@ namespace SolarPlot
                 this.legend.Location = ScottPlot.Alignment.UpperLeft;
                 this.legend.FontSize = 9;
                 this.plot.Plot.XLabel("Date/Time");
-                //this.data.AutoRangeXAxis();
-                //this.data.AutoRangeY0Axis();
-                //this.data.AutoRangeY1Axis(new string[] { "Vac1", "Vac1", "Vac3" });
+                
+
+                this.AutoRangeXAxis();
+                this.AutoRangeYAxis(new string[] { "Power" }, 0);
+                this.AutoRangeYAxis(new string[] { "Vac1", "Vac2", "Vac3" }, 1);
                 this.plot.Configuration.LockVerticalAxis = true;
                 this.plot.Refresh();
+            }
+
+
+            public void AutoRangeXAxis()
+            {
+                double min = Double.MaxValue;
+                double max = Double.MinValue;
+                foreach (KeyValuePair<string, XYData<double>> kvp in this.dataSet)
+                {
+                    double t;
+                    t = kvp.Value.Xmin;
+                    min = (t < min) ? t : min;
+                    t = kvp.Value.Xmax;
+                    max = (t > max) ? t : max;
+                }
+                this.plot.Plot.SetAxisLimits(xMin: min, xMax: max);
+            }
+            public void AutoRangeYAxis(string[] names, int axisIndex)
+            {
+                double min = Double.MaxValue;
+                double max = Double.MinValue;
+                string axisName = "";
+                foreach (string name in names)
+                {
+                    if (this.dataSet.ContainsKey(name))
+                    {
+                        double t;
+                        t = this.dataSet[name].Ymin;
+                        min = (t < min) ? t : min;
+                        t = this.dataSet[name].Ymax;
+                        max = (t > max) ? t : max;
+                        axisName += name + " ";
+                    }
+                }
+                this.plot.Plot.SetAxisLimits(yMin: min, yMax: max * 1.1, yAxisIndex: axisIndex);
+
+                if (axisIndex==0)
+                {
+                    this.plot.Plot.YAxis.Label(axisName);
+                    this.plot.Plot.YAxis.Ticks(true);
+                }
+                else
+                {
+                    this.plot.Plot.YAxis2.Label(axisName);
+                    this.plot.Plot.YAxis2.Ticks(true);
+                }
+
             }
         }
 
@@ -161,22 +244,8 @@ namespace SolarPlot
                 dayLines["Vpv2"].AddPoint(dateTime, Vpv2);
                 dayLines["Temperature"].AddPoint(dateTime, temperature);
             }
-            public void AutoRangeXAxis()
-            {
-                double min = Double.MaxValue;
-                double max = Double.MinValue;
-                foreach (KeyValuePair<string, Line> kvp in dayLines)
-                {
-                    kvp.Value.FillRemainingXAxis();
 
-                    double t;
-                    t = kvp.Value.GetMinX();
-                    min = (t<min)? t : min;
-                    t = kvp.Value.GetMaxX();
-                    max = (t>max)? t : max;
-                }
-                this.form.PlotDay.Plot.SetAxisLimits(xMin: min, xMax: max);
-            }
+
 
             public void AutoRangeY0Axis()
             {

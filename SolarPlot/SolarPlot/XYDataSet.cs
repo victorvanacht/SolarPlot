@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ScottPlot;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using static SolarPlot.XYDataSet;
 
 namespace SolarPlot
 {
-    public class XYDataSet : IEnumerator, IEnumerable
+    public class XYDataSet : IEnumerable
     {
         public class XYPoint<T>
         {
@@ -85,7 +86,7 @@ namespace SolarPlot
                     if (typeof(T) == typeof(double))
                     {
                         double[] yAsDouble = (double[])Convert.ChangeType(y, typeof(double[]));
-                        return yAsDouble.Min();
+                        return yAsDouble.Max();
                     }
                     else
                     {
@@ -106,8 +107,7 @@ namespace SolarPlot
             }
         }
 
-        private Dictionary<string, XYData<double>> dataSet;
-        private int position = -1; // this position is needed for IEnumerable
+        protected Dictionary<string, XYData<double>> dataSet;
 
         public XYDataSet()
         {
@@ -132,28 +132,50 @@ namespace SolarPlot
             }
         }
 
+        public bool ContainsKey(string key) 
+        {
+            return this.dataSet.ContainsKey(key);
+        }
+
         //IEnumerator and IEnumerable require these methods.
         public IEnumerator GetEnumerator()
         {
-            return (IEnumerator)this;
+            return new EnumeratorImplementation(this);
         }
 
-        //IEnumerator
-        public bool MoveNext()
+        private class EnumeratorImplementation : IEnumerator
         {
-            position++;
-            return (position < dataSet.Count);
-        }
-        //IEnumerable
-        public void Reset()
-        {
-            position = -1;
-        }
-        //IEnumerable
-        public object Current
-        {
-            get { KeyValuePair<string, XYData<double>> kvp = dataSet.ElementAtOrDefault(position);
-                return kvp; }
+            private XYDataSet dataSet;
+            private int position = -1;
+
+
+            public EnumeratorImplementation(XYDataSet dataset)
+            {
+                this.dataSet = dataset;
+            }
+
+            //IEnumerator
+            public bool MoveNext()
+            {
+                position++;
+                return (position < this.dataSet.dataSet.Count);
+            }
+
+            //IEnumerable
+            public void Reset()
+            {
+                position = -1;
+            }
+
+            //IEnumerable
+            public object Current
+            {
+                get
+                {
+                    KeyValuePair<string, XYData<double>> kvp = dataSet.dataSet.ElementAtOrDefault(position);
+                    return kvp;
+                }
+            }
         }
 
         public void FillRemainingXAxis()
