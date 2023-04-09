@@ -58,6 +58,11 @@ namespace SolarPlot
                     this.line.XAxisIndex = 0;
                     this.line.YAxisIndex = this.axisIndex;
                 }
+
+                public void SetVisibilty(bool enabled)
+                {
+                    this.line.IsVisible = enabled;
+                }
             }
 
             private class LineProperty
@@ -85,7 +90,7 @@ namespace SolarPlot
             private Dictionary<string, LineProperty> lineProperties = new Dictionary<string, LineProperty>()
             {
                 ["Power"] = new LineProperty(Color.Blue, Color.Blue, true, 0),
-                ["Iac1"]  = new LineProperty(Color.Red, Color.Red, false, 1),
+                ["Iac1"] = new LineProperty(Color.Red, Color.Red, false, 1),
                 ["Iac2"] = new LineProperty(Color.Green, Color.Green, false, 1),
                 ["Iac3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
                 ["Vac1"] = new LineProperty(Color.Red, Color.Red, false, 1),
@@ -122,7 +127,7 @@ namespace SolarPlot
                 this.legend.Location = ScottPlot.Alignment.UpperLeft;
                 this.legend.FontSize = 9;
                 this.plot.Plot.XLabel("Date/Time");
-                
+
 
                 this.AutoRangeXAxis();
                 this.AutoRangeYAxis(new string[] { "Power" }, 0);
@@ -165,7 +170,7 @@ namespace SolarPlot
                 }
                 this.plot.Plot.SetAxisLimits(yMin: min, yMax: max * 1.1, yAxisIndex: axisIndex);
 
-                if (axisIndex==0)
+                if (axisIndex == 0)
                 {
                     this.plot.Plot.YAxis.Label(axisName);
                     this.plot.Plot.YAxis.Ticks(true);
@@ -175,112 +180,22 @@ namespace SolarPlot
                     this.plot.Plot.YAxis2.Label(axisName);
                     this.plot.Plot.YAxis2.Ticks(true);
                 }
+            }
 
+            public void EnableLine(string[] names, bool enable)
+            {
+                foreach (string name in names)
+                {
+                    if (this.lines.ContainsKey(name))
+                    {
+                        this.lines[name].SetVisibilty(enable);
+                    }
+                }
             }
         }
 
-        private DayPlot dayPlot;
-            /*
-
-            
-
-            private MainForm form;
-
-            public DataSet(MainForm form)
-            {
-                this.form = form;
-
-                this.dayLines = new Dictionary<string, Line>() 
-                {
-                    ["Power"] = new Line(this.form.PlotDay, "Power", new double[1000], new double[1000], Color.Blue, Color.Blue, true, 0),
-                    ["Iac1"] = new Line(this.form.PlotDay, "Iac1", new double[1000], new double[1000], Color.Red, Color.Red, false, 1),
-                    ["Iac2"] = new Line(this.form.PlotDay, "Iac2", new double[1000], new double[1000], Color.Green, Color.Green, false, 1),
-                    ["Iac3"] = new Line(this.form.PlotDay, "Iac3", new double[1000], new double[1000], Color.LightBlue, Color.LightBlue, false, 1),
-                    ["Vac1"] = new Line(this.form.PlotDay, "Vac1", new double[1000], new double[1000], Color.Red, Color.Red, false, 1),
-                    ["Vac2"] = new Line(this.form.PlotDay, "Vac2", new double[1000], new double[1000], Color.Green, Color.Green, false, 1),
-                    ["Vac3"] = new Line(this.form.PlotDay, "Vac3", new double[1000], new double[1000], Color.LightBlue, Color.LightBlue, false, 1),
-                    ["Freq1"] = new Line(this.form.PlotDay, "Freq1", new double[1000], new double[1000], Color.Red, Color.Red, false, 1),
-                    ["Freq2"] = new Line(this.form.PlotDay, "Freq2", new double[1000], new double[1000], Color.Green, Color.Green, false, 1),
-                    ["Freq3"] = new Line(this.form.PlotDay, "Freq3", new double[1000], new double[1000], Color.LightBlue, Color.LightBlue, false, 1),
-                    ["Ipv1"] = new Line(this.form.PlotDay, "Ipv1", new double[1000], new double[1000], Color.Red, Color.Red, false, 1),
-                    ["Ipv2"] = new Line(this.form.PlotDay, "Ipv2", new double[1000], new double[1000], Color.Green, Color.Green, false, 1),
-                    ["Vpv1"] = new Line(this.form.PlotDay, "Vpv1", new double[1000], new double[1000], Color.Red, Color.Red, false, 1),
-                    ["Vpv2"] = new Line(this.form.PlotDay, "Vpv2", new double[1000], new double[1000], Color.Green, Color.Green, false, 1),
-                    ["Temperature"] = new Line(this.form.PlotDay, "Temperature", new double[1000], new double[1000], Color.Red, Color.Red, false, 1),
-                };
-            }
-
-            public void Add(DateTime dateTime, 
-                            double power,
-                            double Iac1,
-                            double Iac2,
-                            double Iac3,
-                            double Vac1,
-                            double Vac2,
-                            double Vac3,
-                            double freq1,
-                            double freq2,
-                            double freq3,
-                            double Ipv1,
-                            double Ipv2,
-                            double Vpv1,
-                            double Vpv2,
-                            double temperature
-                            )
-            {
-                dayLines["Power"].AddPoint(dateTime, power);
-                dayLines["Iac1"].AddPoint(dateTime, Iac1);
-                dayLines["Iac2"].AddPoint(dateTime, Iac2);
-                dayLines["Iac3"].AddPoint(dateTime, Iac3);
-                dayLines["Vac1"].AddPoint(dateTime, Vac1);
-                dayLines["Vac2"].AddPoint(dateTime, Vac2);
-                dayLines["Vac3"].AddPoint(dateTime, Vac3);
-                dayLines["Freq1"].AddPoint(dateTime, freq1);
-                dayLines["Freq2"].AddPoint(dateTime, freq2);
-                dayLines["Freq3"].AddPoint(dateTime, freq3);
-                dayLines["Ipv1"].AddPoint(dateTime, Ipv1);
-                dayLines["Ipv2"].AddPoint(dateTime, Ipv2);
-                dayLines["Vpv1"].AddPoint(dateTime, Vpv1);
-                dayLines["Vpv2"].AddPoint(dateTime, Vpv2);
-                dayLines["Temperature"].AddPoint(dateTime, temperature);
-            }
-
-
-
-            public void AutoRangeY0Axis()
-            {
-                double min = dayLines["Power"].GetMinY();
-                double max = dayLines["Power"].GetMaxY();
-                this.form.PlotDay.Plot.SetAxisLimits(yMin: min, yMax: max);
-            }
-
-            public void AutoRangeY1Axis(string[] items)
-            {
-                double min = Double.MaxValue;
-                double max = Double.MinValue;
-                foreach (string item in items)
-                {
-                    double t;
-                    t = dayLines[item].GetMinY();
-                    min = (t < min) ? t : min;
-                    t = dayLines[item].GetMaxY();
-                    max = (t > max) ? t : max;
-                }
-                this.form.PlotDay.Plot.SetAxisLimits(yMin: min, yMax: max, yAxisIndex: 1);
-            }
-
-        */
-
-        /*
-        public class DayPlot
-        {
-            public DayPlot() { }
-
-        
-
-        */
-
         internal XYDataSet dataSet;
+        private DayPlot dayPlot;
 
         private Worker worker;
 
@@ -389,14 +304,40 @@ namespace SolarPlot
         }
 
 
+        private volatile bool dayPlotSelectionChanging = false;
+        private Dictionary<string, string[]> selectionNames = new Dictionary<string, string[]>() 
+        {
+            ["Vpv"] = new string[] { "Vpv1", "Vpv2" },
+            ["Ipv"] = new string[] { "Ipv1", "Ipv2" },
+            ["Vac"] = new string[] { "Vac1", "Vac2", "Vac3" },
+            ["Iac"] = new string[] { "Iac1", "Iac2", "Iac3" },
+            ["Fac"] = new string[] { "Freq1", "Freq2", "Freq3" },
+            ["Temp"] = new string[] { "Temperature" },
+
+        };
+
         private void ProcessDayPlotSelectionChanged(object sender, EventArgs e)
         {
-            System.Windows.Forms.CheckBox[] dayPlotSelectionBoxes = { this.DayCheckBoxVpv, this.DayCheckBoxIpv, this.DayCheckBoxVac, this.DayCheckBoxIac, this.DayCheckBoxFac, this.DayCheckBoxTemp };
-
-            foreach (CheckBox checkbox in dayPlotSelectionBoxes)
+            if (!dayPlotSelectionChanging) // when we are going to change the selection of the other boxes, they will generate this event as well. So we need to ignore those events
             {
-                if (checkbox != sender) checkbox.Checked = false;
-                else checkbox.Checked = true;
+                dayPlotSelectionChanging = true;
+                System.Windows.Forms.CheckBox[] dayPlotSelectionBoxes = { this.DayCheckBoxVpv, this.DayCheckBoxIpv, this.DayCheckBoxVac, this.DayCheckBoxIac, this.DayCheckBoxFac, this.DayCheckBoxTemp };
+                foreach (CheckBox checkbox in dayPlotSelectionBoxes)
+                {
+                    bool visibility = (checkbox == sender);
+                    checkbox.Checked = visibility;
+
+                    string[] selection = selectionNames[checkbox.Text];
+                    this.dayPlot.EnableLine(selection, visibility);
+                    if (visibility)
+                    {
+                        this.dayPlot.AutoRangeYAxis(selection, 1);
+                    }
+
+                    this.PlotDayGraph.Refresh();
+
+                }
+                dayPlotSelectionChanging = false;
             }
         }
     }
