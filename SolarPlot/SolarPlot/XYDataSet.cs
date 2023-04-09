@@ -5,44 +5,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static ScottPlot.Generate;
+using static SolarPlot.XYDataSet;
 
 namespace SolarPlot
 {
     public class XYDataSet : IEnumerator, IEnumerable
     {
-        public class XYPoint
+        public class XYPoint<T>
         {
             public double x;
-            public double y;
+            public T y;
 
-            public XYPoint(double x, double y)
+            public XYPoint(double x, T y)
             {
                 this.x = x;
                 this.y = y;
             }
 
-            public XYPoint(System.DateTime dateTime, double y)
+            public XYPoint(System.DateTime dateTime, T y)
             {
                 this.x = dateTime.ToOADate();
                 this.y = y;
             }
         }
 
-        public class XYData
+        public class XYData<T>
         {
             public double[] x;
-            public double[] y;
+            public T[] y;
             public int count;
 
             public XYData() : this(1000) { }
             public XYData(int initialSize)
             {
                 this.x = new double[initialSize];
-                this.y = new double[initialSize];
+                this.y = new T[initialSize];
                 count = 0;
             }
 
-            public static XYData operator +(XYData xyData, XYPoint point)
+            public static XYData<T> operator +(XYData<T> xyData, XYPoint<T> point)
             {
                 if (xyData.count == xyData.x.Length)
                 {
@@ -56,18 +57,43 @@ namespace SolarPlot
 
                 return xyData;
             }
-            public static XYData operator +(XYPoint point, XYData xyData)
-            {
-                return xyData + point;
-            }
 
             public double Xmin { get => x[0]; }
 
             public double Xmax { get => x[this.count - 1]; }
 
-            public double Ymin { get => y.Min(); }
+            public double Ymin
+            {
+                get
+                {
+                    if (typeof(T) == typeof(double))
+                    {
+                        double[] yAsDouble = (double[])Convert.ChangeType(y, typeof(double[]));
+                        return yAsDouble.Min();
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
 
-            public double Ymax { get => y.Max(); }
+            public double Ymax
+            {
+                get
+                {
+                    if (typeof(T) == typeof(double))
+                    {
+                        double[] yAsDouble = (double[])Convert.ChangeType(y, typeof(double[]));
+                        return yAsDouble.Min();
+                    }
+                    else
+                    {
+                        return 0;
+                    }
+                }
+            }
+
 
             // fill remaining x-as with reasonable data, to prevent ScottPlot giving an error
             public void FillRemainingXAxis()
@@ -80,7 +106,7 @@ namespace SolarPlot
             }
         }
 
-        private Dictionary<string, XYData> dataSet;
+        private Dictionary<string, XYData<double>> dataSet;
         private int position = -1; // this position is needed for IEnumerable
 
         public XYDataSet()
@@ -90,15 +116,11 @@ namespace SolarPlot
 
         public static XYDataSet operator +(XYDataSet dataSet, string name)
         {
-            dataSet.dataSet.Add(name, new XYData());
+            dataSet.dataSet.Add(name, new XYData<double>());
             return dataSet;
         }
-        public static XYDataSet operator +(string name, XYDataSet dataSet)
-        {
-            return dataSet + name;
-        }
 
-        public XYData this[string index]
+        public XYData<double> this[string index]
         {
             get
             {
@@ -130,13 +152,13 @@ namespace SolarPlot
         //IEnumerable
         public object Current
         {
-            get { KeyValuePair<string, XYData> kvp = dataSet.ElementAtOrDefault(position);
+            get { KeyValuePair<string, XYData<double>> kvp = dataSet.ElementAtOrDefault(position);
                 return kvp; }
         }
 
         public void FillRemainingXAxis()
         {
-            foreach (KeyValuePair<string, XYData> kvp in dataSet)
+            foreach (KeyValuePair<string, XYData<double>> kvp in dataSet)
             {
                 kvp.Value.FillRemainingXAxis();
             }
@@ -144,7 +166,7 @@ namespace SolarPlot
 
         public void Clear()
         {
-            this.dataSet = new Dictionary<string, XYData>();
+            this.dataSet = new Dictionary<string, XYData<double>>();
         }
     }
 }

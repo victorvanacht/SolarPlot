@@ -73,7 +73,7 @@ namespace SolarPlot
 
                 this.lines = new Dictionary<string, Line>();
 
-                foreach (KeyValuePair<string, XYData> kvp in dataSet)
+                foreach (KeyValuePair<string, XYData<double>> kvp in dataSet)
                 {
                     string name = kvp.Key;
 

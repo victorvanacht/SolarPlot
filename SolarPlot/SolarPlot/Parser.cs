@@ -116,7 +116,7 @@ namespace SolarPlot
                                 { 
                                     foreach (KeyValuePair<string,int> kvp in columnIndex)
                                     {
-                                        this.dataSet[kvp.Key] += new XYDataSet.XYPoint(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
+                                        this.dataSet[kvp.Key] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
                                     }
                                     previousDateTime = dateTime;
                                 }
