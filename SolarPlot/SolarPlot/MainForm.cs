@@ -8,13 +8,16 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml.Linq;
 using static ScottPlot.Generate;
 using static SolarPlot.XYDataSet;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SolarPlot
 {
@@ -85,7 +88,7 @@ namespace SolarPlot
             ScottPlot.FormsPlot plot;
             public Dictionary<string, Line> lines;
             private ScottPlot.Renderable.Legend legend;
-            private Axis Yaxis2;
+            private ScottPlot.Renderable.Axis Yaxis2;
 
             private Dictionary<string, LineProperty> lineProperties = new Dictionary<string, LineProperty>()
             {
