@@ -214,6 +214,71 @@ namespace SolarPlot
                 this.worker.Command("LoadCSV " + Properties.Settings.Default.OpenFile);
                 this.worker.Command("PlotInit");
             }
+
+            // orginal example code copy & paste from: https://social.msdn.microsoft.com/Forums/vstudio/en-US/9bd4beee-8546-4f17-aeb4-c9262f2d4a05/create-3d-surface?forum=vbgeneral
+            // ported to C# by OpenAI's ChatGPT
+            // a few tiny manual changes to get ChatGPT's work compiling & running
+
+
+            double[,] gPoints = new double[10,10];
+            //create the surface data
+            Random rand = new Random();
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    gPoints[x,y] = (9 - y) * x + rand.Next(0, 10);
+                }
+            }
+
+            //setup the chart
+            ChartArea chartArea = chart2.ChartAreas[0];
+            chartArea.AxisX.Title = "X";
+            chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
+            chartArea.AxisX.Minimum = 0;
+            chartArea.AxisX.Maximum = 10;
+            chartArea.AxisX.Interval = 2;
+
+            chartArea.AxisY.Title = "Y";
+            chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
+            chartArea.AxisY.Minimum = 0;
+
+            chartArea.BackColor = Color.FloralWhite; //AntiqueWhite //LightSkyBlue
+            chartArea.BackSecondaryColor = Color.White;
+            chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
+            chartArea.BorderColor = Color.Blue;
+            chartArea.BorderDashStyle = ChartDashStyle.Solid;
+            chartArea.BorderWidth = 1;
+            chartArea.ShadowOffset = 2;
+
+            // Enable 3D charts
+            chartArea.Area3DStyle.Enable3D = true;
+            chartArea.Area3DStyle.Perspective = 30;
+            //.Area3DStyle.Rotation = -20;
+
+            //DrawChart(); -->
+            //draw the chart
+            chart2.Series.Clear();
+            chart2.ChartAreas[0].Area3DStyle.Rotation = 0;
+
+            for (int i = 0; i < 10; i++)
+            {
+                chart2.Series.Add("z" + i.ToString());
+                chart2.Series[i].ChartType = SeriesChartType.Area;
+                chart2.Series[i].BorderWidth = 0;
+                chart2.Series[i].Color = Color.SteelBlue;
+                chart2.Series[i].IsVisibleInLegend = false;
+                // Set series strip width
+                chart2.Series[i]["PointWidth"] = "1";
+                // Set series points gap to 1 pixels
+                chart2.Series[i]["PixelPointGapDepth"] = "1";
+
+                for (int x = 0; x < 10; x++)
+                {
+                    chart2.Series[i].Points.AddXY(x, gPoints[x, i]);
+                }
+            }
+
         }
         public void SetStatus(string status)
         {
