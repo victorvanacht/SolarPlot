@@ -11,6 +11,7 @@ using static SolarPlot.Worker.LoadCSV;
 using System.Data.Common;
 using System.Xml.Linq;
 using ScottPlot;
+using System.Windows.Forms;
 
 namespace SolarPlot
 {
@@ -23,8 +24,9 @@ namespace SolarPlot
             this.commands = new Dictionary<string, ParsersBase>
             {
                 ["LOADCSV"] = new LoadCSV(this.form),
+                ["CALCULATEENERGYPERPERIOD"] = new CalculateEnergyPerPeriod(this.form),
                 ["PLOTINIT"] = new PlotInit(this.form),
-            };
+        };
         }
 
 
@@ -135,6 +137,18 @@ namespace SolarPlot
                     this.form.SetErrorStatus("File not found.");
                 }
             }
+
+            public class CalculateEnergyPerPeriod : ParsersBase
+            {
+                public CalculateEnergyPerPeriod(MainForm form) : base (form) {  }
+
+                public override void Parse(string[] commandItems)
+                {
+                    this.dataSet.CalculateEnergyFromPower();
+                }
+
+            }
+
 
             public class PlotInit : ParsersBase
             {

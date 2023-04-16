@@ -41,6 +41,8 @@
             this.DayCheckBoxIac = new System.Windows.Forms.CheckBox();
             this.DayCheckBoxVac = new System.Windows.Forms.CheckBox();
             this.tabPageYear = new System.Windows.Forms.TabPage();
+            this.YearTrackBarAngle = new System.Windows.Forms.TrackBar();
+            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPageDecade = new System.Windows.Forms.TabPage();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,13 +54,14 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
-            this.chart2 = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.DayCheckBoxKWHr = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabPageDay.SuspendLayout();
             this.tabPageYear.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.YearTrackBarAngle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).BeginInit();
             this.SuspendLayout();
             // 
             // PlotDayGraph
@@ -88,6 +91,7 @@
             // 
             // tabPageDay
             // 
+            this.tabPageDay.Controls.Add(this.DayCheckBoxKWHr);
             this.tabPageDay.Controls.Add(this.DayCheckBoxTemp);
             this.tabPageDay.Controls.Add(this.DayCheckBoxFac);
             this.tabPageDay.Controls.Add(this.DayCheckBoxIpv);
@@ -108,7 +112,7 @@
             this.DayCheckBoxTemp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DayCheckBoxTemp.Location = new System.Drawing.Point(251, 431);
             this.DayCheckBoxTemp.Name = "DayCheckBoxTemp";
-            this.DayCheckBoxTemp.Size = new System.Drawing.Size(104, 24);
+            this.DayCheckBoxTemp.Size = new System.Drawing.Size(54, 24);
             this.DayCheckBoxTemp.TabIndex = 40;
             this.DayCheckBoxTemp.Text = "Temp";
             this.DayCheckBoxTemp.UseVisualStyleBackColor = true;
@@ -176,6 +180,7 @@
             // 
             // tabPageYear
             // 
+            this.tabPageYear.Controls.Add(this.YearTrackBarAngle);
             this.tabPageYear.Controls.Add(this.chart2);
             this.tabPageYear.Location = new System.Drawing.Point(4, 22);
             this.tabPageYear.Name = "tabPageYear";
@@ -184,6 +189,39 @@
             this.tabPageYear.TabIndex = 1;
             this.tabPageYear.Text = "Year";
             this.tabPageYear.UseVisualStyleBackColor = true;
+            // 
+            // YearTrackBarAngle
+            // 
+            this.YearTrackBarAngle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.YearTrackBarAngle.Location = new System.Drawing.Point(8, 6);
+            this.YearTrackBarAngle.Maximum = 180;
+            this.YearTrackBarAngle.Minimum = -180;
+            this.YearTrackBarAngle.Name = "YearTrackBarAngle";
+            this.YearTrackBarAngle.Orientation = System.Windows.Forms.Orientation.Vertical;
+            this.YearTrackBarAngle.Size = new System.Drawing.Size(45, 443);
+            this.YearTrackBarAngle.TabIndex = 39;
+            this.YearTrackBarAngle.ValueChanged += new System.EventHandler(this.YearTrackBarAngle_ValueChanged);
+            // 
+            // chart2
+            // 
+            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea1.Name = "ChartArea1";
+            this.chart2.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart2.Legends.Add(legend1);
+            this.chart2.Location = new System.Drawing.Point(59, 3);
+            this.chart2.Name = "chart2";
+            this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chart2.Series.Add(series1);
+            this.chart2.Size = new System.Drawing.Size(917, 446);
+            this.chart2.TabIndex = 38;
+            this.chart2.Text = "chart2";
             // 
             // tabPageDecade
             // 
@@ -278,25 +316,16 @@
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
-            // chart2
+            // DayCheckBoxKWHr
             // 
-            this.chart2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea1.Name = "ChartArea1";
-            this.chart2.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart2.Legends.Add(legend1);
-            this.chart2.Location = new System.Drawing.Point(8, 6);
-            this.chart2.Name = "chart2";
-            this.chart2.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chart2.Series.Add(series1);
-            this.chart2.Size = new System.Drawing.Size(960, 446);
-            this.chart2.TabIndex = 38;
-            this.chart2.Text = "chart2";
+            this.DayCheckBoxKWHr.AutoSize = true;
+            this.DayCheckBoxKWHr.Location = new System.Drawing.Point(302, 435);
+            this.DayCheckBoxKWHr.Name = "DayCheckBoxKWHr";
+            this.DayCheckBoxKWHr.Size = new System.Drawing.Size(54, 17);
+            this.DayCheckBoxKWHr.TabIndex = 41;
+            this.DayCheckBoxKWHr.Text = "kWHr";
+            this.DayCheckBoxKWHr.UseVisualStyleBackColor = true;
+            this.DayCheckBoxKWHr.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
             // 
             // MainForm
             // 
@@ -314,11 +343,13 @@
             this.tabPageDay.ResumeLayout(false);
             this.tabPageDay.PerformLayout();
             this.tabPageYear.ResumeLayout(false);
+            this.tabPageYear.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.YearTrackBarAngle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -350,6 +381,8 @@
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
+        private System.Windows.Forms.TrackBar YearTrackBarAngle;
+        private System.Windows.Forms.CheckBox DayCheckBoxKWHr;
     }
 }
 

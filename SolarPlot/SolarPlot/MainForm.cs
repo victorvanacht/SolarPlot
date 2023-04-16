@@ -23,180 +23,6 @@ namespace SolarPlot
 {
     public partial class MainForm : Form
     {
-
-        internal class DayPlot
-        {
-            internal class Line
-            {
-                private FormsPlot plot;
-                private double[] xData;
-                private double[] yData;
-                private string name;
-                private Color color;
-                private Color fillColor;
-                private bool fill;
-                private int axisIndex;
-                private int count;
-
-                private ScottPlot.Plottable.SignalPlotXY line;
-
-                public Line(ScottPlot.FormsPlot plot, string name, double[] xData, double[] yData, Color lineColor, Color fillColor, bool fill, int axisIndex)
-                {
-                    this.plot = plot;
-                    this.name = name;
-                    this.xData = xData;
-                    this.yData = yData;
-                    this.color = lineColor;
-                    this.fillColor = fillColor;
-                    this.fill = fill;
-                    this.axisIndex = axisIndex;
-                    this.count = 0;
-
-                    this.line = this.plot.Plot.AddSignalXY(this.xData, this.yData, this.color, this.name);
-                    this.line.LineWidth = 2;
-                    this.line.MarkerSize = 0;
-                    this.line.Color = color;
-                    if (this.fill) this.line.FillBelow(fillColor, 0.2);
-                    this.line.Smooth = true;
-                    this.line.XAxisIndex = 0;
-                    this.line.YAxisIndex = this.axisIndex;
-                }
-
-                public void SetVisibilty(bool enabled)
-                {
-                    this.line.IsVisible = enabled;
-                }
-            }
-
-            private class LineProperty
-            {
-                public Color color;
-                public Color fillColor;
-                public bool fill;
-                public int axisIndex;
-
-                public LineProperty(Color color, Color fillColor, bool fill, int axisIndex)
-                {
-                    this.color = color;
-                    this.fillColor = fillColor;
-                    this.fill = fill;
-                    this.axisIndex = axisIndex;
-                }
-            }
-
-            XYDataSet dataSet;
-            ScottPlot.FormsPlot plot;
-            public Dictionary<string, Line> lines;
-            private ScottPlot.Renderable.Legend legend;
-            private ScottPlot.Renderable.Axis Yaxis2;
-
-            private Dictionary<string, LineProperty> lineProperties = new Dictionary<string, LineProperty>()
-            {
-                ["Power"] = new LineProperty(Color.Blue, Color.Blue, true, 0),
-                ["Iac1"] = new LineProperty(Color.Red, Color.Red, false, 1),
-                ["Iac2"] = new LineProperty(Color.Green, Color.Green, false, 1),
-                ["Iac3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
-                ["Vac1"] = new LineProperty(Color.Red, Color.Red, false, 1),
-                ["Vac2"] = new LineProperty(Color.Green, Color.Green, false, 1),
-                ["Vac3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
-                ["Freq1"] = new LineProperty(Color.Red, Color.Red, false, 1),
-                ["Freq2"] = new LineProperty(Color.Green, Color.Green, false, 1),
-                ["Freq3"] = new LineProperty(Color.LightBlue, Color.LightBlue, false, 1),
-                ["Ipv1"] = new LineProperty(Color.Red, Color.Red, false, 1),
-                ["Ipv2"] = new LineProperty(Color.Green, Color.Green, false, 1),
-                ["Vpv1"] = new LineProperty(Color.Red, Color.Red, false, 1),
-                ["Vpv2"] = new LineProperty(Color.Green, Color.Green, false, 1),
-                ["Temperature"] = new LineProperty(Color.Purple, Color.Purple, false, 1),
-
-            };
-
-            public DayPlot(XYDataSet dataSet, ScottPlot.FormsPlot plot)
-            {
-                this.dataSet = dataSet;
-                this.plot = plot;
-
-                this.lines = new Dictionary<string, Line>();
-
-                foreach (KeyValuePair<string, XYData<double>> kvp in dataSet)
-                {
-                    string name = kvp.Key;
-                    LineProperty prop = lineProperties[name];
-                    lines.Add(name, new Line(plot, name, kvp.Value.x, kvp.Value.y, prop.color, prop.fillColor, prop.fill, prop.axisIndex));
-
-                }
-                this.plot.Plot.XAxis.DateTimeFormat(true);
-                this.legend = this.plot.Plot.Legend();
-                this.legend.Orientation = ScottPlot.Orientation.Vertical;
-                this.legend.Location = ScottPlot.Alignment.UpperLeft;
-                this.legend.FontSize = 9;
-                this.plot.Plot.XLabel("Date/Time");
-
-
-                this.AutoRangeXAxis();
-                this.AutoRangeYAxis(new string[] { "Power" }, 0);
-                this.AutoRangeYAxis(new string[] { "Vac1", "Vac2", "Vac3" }, 1);
-                this.plot.Configuration.LockVerticalAxis = true;
-                this.plot.Refresh();
-            }
-
-
-            public void AutoRangeXAxis()
-            {
-                double min = Double.MaxValue;
-                double max = Double.MinValue;
-                foreach (KeyValuePair<string, XYData<double>> kvp in this.dataSet)
-                {
-                    double t;
-                    t = kvp.Value.Xmin;
-                    min = (t < min) ? t : min;
-                    t = kvp.Value.Xmax;
-                    max = (t > max) ? t : max;
-                }
-                this.plot.Plot.SetAxisLimits(xMin: min, xMax: max);
-            }
-            public void AutoRangeYAxis(string[] names, int axisIndex)
-            {
-                double min = Double.MaxValue;
-                double max = Double.MinValue;
-                string axisName = "";
-                foreach (string name in names)
-                {
-                    if (this.dataSet.ContainsKey(name))
-                    {
-                        double t;
-                        t = this.dataSet[name].Ymin;
-                        min = (t < min) ? t : min;
-                        t = this.dataSet[name].Ymax;
-                        max = (t > max) ? t : max;
-                        axisName += name + " ";
-                    }
-                }
-                this.plot.Plot.SetAxisLimits(yMin: min, yMax: max * 1.1, yAxisIndex: axisIndex);
-
-                if (axisIndex == 0)
-                {
-                    this.plot.Plot.YAxis.Label(axisName);
-                    this.plot.Plot.YAxis.Ticks(true);
-                }
-                else
-                {
-                    this.plot.Plot.YAxis2.Label(axisName);
-                    this.plot.Plot.YAxis2.Ticks(true);
-                }
-            }
-
-            public void EnableLine(string[] names, bool enable)
-            {
-                foreach (string name in names)
-                {
-                    if (this.lines.ContainsKey(name))
-                    {
-                        this.lines[name].SetVisibilty(enable);
-                    }
-                }
-            }
-        }
-
         internal XYDataSet dataSet;
         private DayPlot dayPlot;
 
@@ -212,6 +38,7 @@ namespace SolarPlot
             if (Properties.Settings.Default.OpenFile != "")
             {
                 this.worker.Command("LoadCSV " + Properties.Settings.Default.OpenFile);
+                this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }
 
@@ -220,14 +47,14 @@ namespace SolarPlot
             // a few tiny manual changes to get ChatGPT's work compiling & running
 
 
-            double[,] gPoints = new double[10,10];
+            gPoints = new double[48,52];
             //create the surface data
             Random rand = new Random();
-            for (int y = 0; y < 10; y++)
+            for (int y = 0; y < 52; y++)
             {
-                for (int x = 0; x < 10; x++)
+                for (int x = 0; x < 48; x++)
                 {
-                    gPoints[x,y] = (9 - y) * x + rand.Next(0, 10);
+                    gPoints[x,y] = -(x-24)*(x-24) * (((double)y)/50) + 100;
                 }
             }
 
@@ -236,7 +63,7 @@ namespace SolarPlot
             chartArea.AxisX.Title = "X";
             chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
             chartArea.AxisX.Minimum = 0;
-            chartArea.AxisX.Maximum = 10;
+            chartArea.AxisX.Maximum = 48;
             chartArea.AxisX.Interval = 2;
 
             chartArea.AxisY.Title = "Y";
@@ -253,19 +80,25 @@ namespace SolarPlot
 
             // Enable 3D charts
             chartArea.Area3DStyle.Enable3D = true;
-            chartArea.Area3DStyle.Perspective = 30;
-            //.Area3DStyle.Rotation = -20;
-
-            //DrawChart(); -->
+            chartArea.Area3DStyle.Perspective = 2;
+  
+            DrawChart();
             //draw the chart
-            chart2.Series.Clear();
-            chart2.ChartAreas[0].Area3DStyle.Rotation = 0;
+        }
 
-            for (int i = 0; i < 10; i++)
+        public double[,] gPoints;
+
+
+        public void DrawChart()
+        {
+            chart2.Series.Clear();
+            chart2.ChartAreas[0].Area3DStyle.Rotation = this.YearTrackBarAngle.Value;
+
+            for (int i = 0; i < 52; i++)
             {
                 chart2.Series.Add("z" + i.ToString());
                 chart2.Series[i].ChartType = SeriesChartType.Area;
-                chart2.Series[i].BorderWidth = 0;
+                chart2.Series[i].BorderWidth = 1;
                 chart2.Series[i].Color = Color.SteelBlue;
                 chart2.Series[i].IsVisibleInLegend = false;
                 // Set series strip width
@@ -273,14 +106,15 @@ namespace SolarPlot
                 // Set series points gap to 1 pixels
                 chart2.Series[i]["PixelPointGapDepth"] = "1";
 
-                for (int x = 0; x < 10; x++)
+                for (int x = 0; x < 48; x++)
                 {
                     chart2.Series[i].Points.AddXY(x, gPoints[x, i]);
                 }
             }
-
         }
-        public void SetStatus(string status)
+
+
+public void SetStatus(string status)
         {
             if (this.statusStrip.InvokeRequired)
             {
@@ -344,6 +178,7 @@ namespace SolarPlot
             {
                 Properties.Settings.Default.OpenFile = openFileDialog.FileName;
                 this.worker.Command("LoadCSV " + openFileDialog.FileName);
+                this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }
         }
@@ -381,6 +216,7 @@ namespace SolarPlot
             ["Iac"] = new string[] { "Iac1", "Iac2", "Iac3" },
             ["Fac"] = new string[] { "Freq1", "Freq2", "Freq3" },
             ["Temp"] = new string[] { "Temperature" },
+            ["kWHr"] = new string[] { "EnergyPerDay", "EnergyPerHalfHour" },
 
         };
 
@@ -389,7 +225,7 @@ namespace SolarPlot
             if (!dayPlotSelectionChanging) // when we are going to change the selection of the other boxes, they will generate this event as well. So we need to ignore those events
             {
                 dayPlotSelectionChanging = true;
-                System.Windows.Forms.CheckBox[] dayPlotSelectionBoxes = { this.DayCheckBoxVpv, this.DayCheckBoxIpv, this.DayCheckBoxVac, this.DayCheckBoxIac, this.DayCheckBoxFac, this.DayCheckBoxTemp };
+                System.Windows.Forms.CheckBox[] dayPlotSelectionBoxes = { this.DayCheckBoxVpv, this.DayCheckBoxIpv, this.DayCheckBoxVac, this.DayCheckBoxIac, this.DayCheckBoxFac, this.DayCheckBoxTemp, this.DayCheckBoxKWHr};
                 foreach (CheckBox checkbox in dayPlotSelectionBoxes)
                 {
                     bool visibility = (checkbox == sender);
@@ -407,6 +243,11 @@ namespace SolarPlot
                 }
                 dayPlotSelectionChanging = false;
             }
+        }
+
+        private void YearTrackBarAngle_ValueChanged(object sender, EventArgs e)
+        {
+            DrawChart();
         }
     }
 }

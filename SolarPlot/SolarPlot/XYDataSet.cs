@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.DataVisualization.Charting;
 using static ScottPlot.Generate;
 using static SolarPlot.XYDataSet;
 
@@ -185,6 +186,55 @@ namespace SolarPlot
                 kvp.Value.FillRemainingXAxis();
             }
         }
+
+        public void CalculateEnergyFromPower()
+        {
+            if (dataSet.ContainsKey("Power"))
+            {
+                XYData<double> power = this.dataSet["Power"];
+
+                this.dataSet.Add("EnergyPerDay", new XYData<double>());
+                this.dataSet.Add("EnergyPerHalfHour", new XYData<double>());
+
+                System.DateTime dayStart = System.DateTime.FromOADate(power.x[0]).Date;
+                double dayEnd = (dayStart + new TimeSpan(1, 0, 0, 0)).ToOADate();
+                double dayEnergy = 0;
+
+                System.DateTime periodStart = dayStart;
+                double periodEnd = (dayStart + new TimeSpan(0, 30, 0)).ToOADate();
+                double periodEnergy = 0;
+
+                for (int index = 0; index < power.count-1; index++)
+                {
+                    TimeSpan dt = System.DateTime.FromOADate(power.x[index + 1]) - System.DateTime.FromOADate(power.x[index]);
+                    double dEnergy = power.y[index] * dt.TotalSeconds; // Joule
+
+                    dayEnergy += dEnergy;
+                    periodEnergy += dEnergy;
+
+                    if (power.x[index] >= dayEnd)
+                    {
+                        this.dataSet["EnergyPerDay"] += new XYPoint<double>(dayStart + new TimeSpan(12, 0, 0), dayEnergy / 3600000);
+                        dayStart += new TimeSpan(1, 0, 0, 0);
+                        dayEnd = (dayStart + new TimeSpan(1, 0, 0, 0)).ToOADate();
+                        dayEnergy= 0;
+                    }
+                    if (power.x[index] >= periodEnd)
+                    {
+                        this.dataSet["EnergyPerHalfHour"] += new XYPoint<double>(periodStart + new TimeSpan(0, 15, 0), periodEnergy / 3600000);
+                        periodStart += new TimeSpan(0, 30, 0);
+                        periodEnd = (periodStart + new TimeSpan(0, 30, 0)).ToOADate();
+                        periodEnergy = 0;
+                    }
+                }
+                //do last unfinish period.
+                this.dataSet["EnergyPerDay"] += new XYPoint<double>(dayStart + new TimeSpan(12, 0, 0), dayEnergy / 3600000);
+                this.dataSet["EnergyPerHalfHour"] += new XYPoint<double>(periodStart + new TimeSpan(0, 15, 0), periodEnergy / 3600000);
+                this.dataSet["EnergyPerDay"].FillRemainingXAxis();
+                this.dataSet["EnergyPerHalfHour"].FillRemainingXAxis();
+            }
+        }
+
 
         public void Clear()
         {
