@@ -25,6 +25,7 @@ namespace SolarPlot
     {
         internal XYDataSet dataSet;
         private DayPlot dayPlot;
+        private YearPlot yearPlot;
 
         private Worker worker;
 
@@ -41,80 +42,9 @@ namespace SolarPlot
                 this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }
-
-            // orginal example code copy & paste from: https://social.msdn.microsoft.com/Forums/vstudio/en-US/9bd4beee-8546-4f17-aeb4-c9262f2d4a05/create-3d-surface?forum=vbgeneral
-            // ported to C# by OpenAI's ChatGPT
-            // a few tiny manual changes to get ChatGPT's work compiling & running
-
-
-            gPoints = new double[48,52];
-            //create the surface data
-            Random rand = new Random();
-            for (int y = 0; y < 52; y++)
-            {
-                for (int x = 0; x < 48; x++)
-                {
-                    gPoints[x,y] = -(x-24)*(x-24) * (((double)y)/50) + 100;
-                }
-            }
-
-            //setup the chart
-            ChartArea chartArea = chart2.ChartAreas[0];
-            chartArea.AxisX.Title = "X";
-            chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
-            chartArea.AxisX.Minimum = 0;
-            chartArea.AxisX.Maximum = 48;
-            chartArea.AxisX.Interval = 2;
-
-            chartArea.AxisY.Title = "Y";
-            chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
-            chartArea.AxisY.Minimum = 0;
-
-            chartArea.BackColor = Color.FloralWhite; //AntiqueWhite //LightSkyBlue
-            chartArea.BackSecondaryColor = Color.White;
-            chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
-            chartArea.BorderColor = Color.Blue;
-            chartArea.BorderDashStyle = ChartDashStyle.Solid;
-            chartArea.BorderWidth = 1;
-            chartArea.ShadowOffset = 2;
-
-            // Enable 3D charts
-            chartArea.Area3DStyle.Enable3D = true;
-            chartArea.Area3DStyle.Perspective = 2;
-  
-            DrawChart();
-            //draw the chart
         }
 
-        public double[,] gPoints;
-
-
-        public void DrawChart()
-        {
-            chart2.Series.Clear();
-            chart2.ChartAreas[0].Area3DStyle.Rotation = this.YearTrackBarAngle.Value;
-
-            for (int i = 0; i < 52; i++)
-            {
-                chart2.Series.Add("z" + i.ToString());
-                chart2.Series[i].ChartType = SeriesChartType.Area;
-                chart2.Series[i].BorderWidth = 1;
-                chart2.Series[i].Color = Color.SteelBlue;
-                chart2.Series[i].IsVisibleInLegend = false;
-                // Set series strip width
-                chart2.Series[i]["PointWidth"] = "1";
-                // Set series points gap to 1 pixels
-                chart2.Series[i]["PixelPointGapDepth"] = "1";
-
-                for (int x = 0; x < 48; x++)
-                {
-                    chart2.Series[i].Points.AddXY(x, gPoints[x, i]);
-                }
-            }
-        }
-
-
-public void SetStatus(string status)
+        public void SetStatus(string status)
         {
             if (this.statusStrip.InvokeRequired)
             {
@@ -159,6 +89,7 @@ public void SetStatus(string status)
             else
             {
                 this.dayPlot = new DayPlot(this.dataSet, this.PlotDayGraph);
+                this.yearPlot = new YearPlot(this.dataSet, this.PlotYear);
             }
         }
 
@@ -247,7 +178,7 @@ public void SetStatus(string status)
 
         private void YearTrackBarAngle_ValueChanged(object sender, EventArgs e)
         {
-            DrawChart();
+            this.yearPlot.DrawChart(this.YearTrackBarAngle.Value);
         }
     }
 }
