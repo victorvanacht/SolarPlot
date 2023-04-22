@@ -11,6 +11,19 @@ namespace SolarPlot
 {
     internal class YearPlot
     {
+        class WeekEntry
+        {
+            public string name;
+            public Color color;
+
+            public WeekEntry(string name, Color color)
+            {
+                this.name = name;
+                this.color = color;
+            }
+        }
+
+
         XYDataSet dataSet;
         System.Windows.Forms.DataVisualization.Charting.Chart plot;
 
@@ -27,13 +40,21 @@ namespace SolarPlot
 
             //setup the chart
             ChartArea chartArea = plot.ChartAreas[0];
-            chartArea.AxisX.Title = "X";
+            chartArea.AxisX.Title = "Time of Day";
+
+            for (int i = 0; i < 48; i++)
+            {
+                string labelString = "";
+                if ((i%2)==0) labelString += (i/2).ToString()+":00";
+                CustomLabel t = new CustomLabel(i, i+1, labelString, 0, LabelMarkStyle.None);
+                chartArea.AxisX.CustomLabels.Add(t);
+            }
             chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
             chartArea.AxisX.Minimum = 0;
             chartArea.AxisX.Maximum = 48;
             chartArea.AxisX.Interval = 2;
 
-            chartArea.AxisY.Title = "Y";
+            chartArea.AxisY.Title = "Average kWh";
             chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
             chartArea.AxisY.Minimum = 0;
 
@@ -50,15 +71,37 @@ namespace SolarPlot
             chartArea.Area3DStyle.Perspective = 2;
 
 
+
+            Dictionary<int,WeekEntry> weekData= new Dictionary<int, WeekEntry>()
+            {
+                [0] = new WeekEntry("January", Color.FromArgb(255,128,128)),
+                [13] = new WeekEntry("April",  Color.FromArgb(192, 192, 128)),
+                [26] = new WeekEntry("July",   Color.FromArgb(128, 255, 128)),
+                [39] = new WeekEntry("October", Color.FromArgb(128, 192, 192))
+            };
+
+
             //draw the chart
             plot.Series.Clear();
+            Color color = Color.Black;
             for (int i = 0; i < 52; i++)
             {
-                plot.Series.Add("z" + i.ToString());
+                bool inLegend = false;
+                string seriesName = "w" + i.ToString();
+                if (weekData.ContainsKey(i))
+                {
+                    seriesName = weekData[i].name;
+                    color = weekData[i].color;
+                    inLegend = true;
+                }
+
+                plot.Series.Add(seriesName);
                 plot.Series[i].ChartType = SeriesChartType.Area;
+                //plot.Series[i].IsValueShownAsLabel = true;
+                //plot.Series[i].AxisLabel = i.ToString();
                 plot.Series[i].BorderWidth = 1;
-                plot.Series[i].Color = Color.SteelBlue;
-                plot.Series[i].IsVisibleInLegend = false;
+                plot.Series[i].Color = color;
+                plot.Series[i].IsVisibleInLegend = inLegend;
                 // Set series strip width
                 plot.Series[i]["PointWidth"] = "1";
                 // Set series points gap to 1 pixels
@@ -106,3 +149,4 @@ namespace SolarPlot
         }
     }
 }
+
