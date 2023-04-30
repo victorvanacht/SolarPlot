@@ -28,9 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.PlotDayGraph = new ScottPlot.FormsPlot();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageDay = new System.Windows.Forms.TabPage();
@@ -56,13 +59,18 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.PlotDecade = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.DecadeTrackBarAngle = new System.Windows.Forms.TrackBar();
             this.tabControl.SuspendLayout();
             this.tabPageDay.SuspendLayout();
             this.tabPageYear.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.YearTrackBarAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlotYear)).BeginInit();
+            this.tabPageDecade.SuspendLayout();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlotDecade)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DecadeTrackBarAngle)).BeginInit();
             this.SuspendLayout();
             // 
             // PlotDayGraph
@@ -231,23 +239,25 @@
             this.PlotYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea2.Name = "ChartArea1";
-            this.PlotYear.ChartAreas.Add(chartArea2);
-            legend2.Name = "Legend1";
-            this.PlotYear.Legends.Add(legend2);
+            chartArea4.Name = "ChartArea1";
+            this.PlotYear.ChartAreas.Add(chartArea4);
+            legend4.Name = "Legend1";
+            this.PlotYear.Legends.Add(legend4);
             this.PlotYear.Location = new System.Drawing.Point(3, 3);
             this.PlotYear.Name = "PlotYear";
             this.PlotYear.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.PlotYear.Series.Add(series2);
+            series4.ChartArea = "ChartArea1";
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.PlotYear.Series.Add(series4);
             this.PlotYear.Size = new System.Drawing.Size(973, 401);
             this.PlotYear.TabIndex = 38;
             this.PlotYear.Text = "PlotYear";
             // 
             // tabPageDecade
             // 
+            this.tabPageDecade.Controls.Add(this.DecadeTrackBarAngle);
+            this.tabPageDecade.Controls.Add(this.PlotDecade);
             this.tabPageDecade.Location = new System.Drawing.Point(4, 22);
             this.tabPageDecade.Name = "tabPageDecade";
             this.tabPageDecade.Padding = new System.Windows.Forms.Padding(3);
@@ -339,6 +349,38 @@
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
+            // PlotDecade
+            // 
+            this.PlotDecade.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea3.Name = "ChartArea1";
+            this.PlotDecade.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.PlotDecade.Legends.Add(legend3);
+            this.PlotDecade.Location = new System.Drawing.Point(3, 6);
+            this.PlotDecade.Name = "PlotDecade";
+            this.PlotDecade.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
+            series3.ChartArea = "ChartArea1";
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.PlotDecade.Series.Add(series3);
+            this.PlotDecade.Size = new System.Drawing.Size(973, 401);
+            this.PlotDecade.TabIndex = 39;
+            this.PlotDecade.Text = "PlotDecade";
+            // 
+            // DecadeTrackBarAngle
+            // 
+            this.DecadeTrackBarAngle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DecadeTrackBarAngle.Location = new System.Drawing.Point(8, 407);
+            this.DecadeTrackBarAngle.Maximum = 180;
+            this.DecadeTrackBarAngle.Minimum = -180;
+            this.DecadeTrackBarAngle.Name = "DecadeTrackBarAngle";
+            this.DecadeTrackBarAngle.Size = new System.Drawing.Size(962, 45);
+            this.DecadeTrackBarAngle.TabIndex = 40;
+            this.DecadeTrackBarAngle.ValueChanged += new System.EventHandler(this.DecadeTrackBarAngle_ValueChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -358,10 +400,14 @@
             this.tabPageYear.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.YearTrackBarAngle)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlotYear)).EndInit();
+            this.tabPageDecade.ResumeLayout(false);
+            this.tabPageDecade.PerformLayout();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PlotDecade)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DecadeTrackBarAngle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -396,6 +442,8 @@
         private System.Windows.Forms.TrackBar YearTrackBarAngle;
         private System.Windows.Forms.CheckBox DayCheckBoxKWHr;
         private System.Windows.Forms.ComboBox YearComboBoxSelectYear;
+        private System.Windows.Forms.TrackBar DecadeTrackBarAngle;
+        private System.Windows.Forms.DataVisualization.Charting.Chart PlotDecade;
     }
 }
 

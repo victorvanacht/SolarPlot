@@ -128,6 +128,8 @@ namespace SolarPlot
             this.plot = plot;
             this.lines = new Dictionary<string, Line>();
 
+            this.plot.Plot.Clear();
+
             // first add the bar graphs, so they will be in the back ground
             string[] barNames = { "EnergyPerDay", "EnergyPerHalfHour" };
             foreach (string barName in barNames)

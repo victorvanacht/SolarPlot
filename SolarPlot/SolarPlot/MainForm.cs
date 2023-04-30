@@ -26,6 +26,7 @@ namespace SolarPlot
         internal XYDataSet dataSet;
         private DayPlot dayPlot;
         private YearPlot yearPlot;
+        private DecadePlot decadePlot;
 
         private Worker worker;
 
@@ -90,6 +91,7 @@ namespace SolarPlot
             {
                 this.dayPlot = new DayPlot(this.dataSet, this.PlotDayGraph);
                 this.yearPlot = new YearPlot(this.dataSet, this.PlotYear, this.YearComboBoxSelectYear);
+                this.decadePlot = new DecadePlot(this.dataSet, this.PlotDecade);
             }
         }
 
@@ -191,6 +193,11 @@ namespace SolarPlot
                 this.yearPlot.LoadYearDataInChart(year);
                 this.yearPlot.DrawChart(this.YearTrackBarAngle.Value);
             }
+        }
+
+        private void DecadeTrackBarAngle_ValueChanged(object sender, EventArgs e)
+        {
+            this.decadePlot.DrawChart(this.DecadeTrackBarAngle.Value);
         }
     }
 }
