@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms.DataVisualization.Charting;
+using static ScottPlot.Plottable.PopulationPlot;
+using static SolarPlot.XYDataSet;
 
 namespace SolarPlot
 {
@@ -23,20 +26,32 @@ namespace SolarPlot
             }
         }
 
-
         XYDataSet dataSet;
         System.Windows.Forms.DataVisualization.Charting.Chart plot;
+        System.Windows.Forms.ComboBox comboBox;
+
+        private Dictionary<int, double[,]> data;
+
 
         // orginal example code copy & paste from: https://social.msdn.microsoft.com/Forums/vstudio/en-US/9bd4beee-8546-4f17-aeb4-c9262f2d4a05/create-3d-surface?forum=vbgeneral
         // ported to C# by OpenAI's ChatGPT
         // a few tiny manual changes to get ChatGPT's work compiling & running
 
-        public YearPlot(XYDataSet dataSet, System.Windows.Forms.DataVisualization.Charting.Chart plot)
+        public YearPlot(XYDataSet dataSet, System.Windows.Forms.DataVisualization.Charting.Chart plot, System.Windows.Forms.ComboBox comboBox)
         {
             this.dataSet = dataSet;
             this.plot = plot;
+            this.comboBox = comboBox;
 
             this.CalcultePoints();
+
+            // fill the combobox wih years
+            foreach (KeyValuePair<int, double[,]> kvp in data)
+            {
+                this.comboBox.Items.Add(kvp.Key.ToString());
+            }
+            this.comboBox.SelectedIndex = 0;
+
 
             //setup the chart
             ChartArea chartArea = plot.ChartAreas[0];
@@ -70,18 +85,28 @@ namespace SolarPlot
             chartArea.Area3DStyle.Enable3D = true;
             chartArea.Area3DStyle.Perspective = 2;
 
+            LoadYearDataInChart(data.ElementAtOrDefault(0).Key);
+            DrawChart(0);
+        }
 
-
-            Dictionary<int,WeekEntry> weekData= new Dictionary<int, WeekEntry>()
+        public void LoadYearDataInChart(int year)
+        {
+            Dictionary<int, WeekEntry> weekData = new Dictionary<int, WeekEntry>()
             {
-                [0] = new WeekEntry("January", Color.FromArgb(255,128,128)),
-                [13] = new WeekEntry("April",  Color.FromArgb(192, 192, 128)),
-                [26] = new WeekEntry("July",   Color.FromArgb(128, 255, 128)),
-                [39] = new WeekEntry("October", Color.FromArgb(128, 192, 192))
+                [0] = new WeekEntry("January", Color.FromArgb(115, 232, 255)),
+                [5] = new WeekEntry("February", Color.FromArgb(115, 240, 230)),
+                [9] = new WeekEntry("March", Color.FromArgb(115, 248, 205)),
+                [13] = new WeekEntry("April", Color.FromArgb(115, 255, 180)),
+                [17] = new WeekEntry("May", Color.FromArgb(161, 248, 159)),
+                [22] = new WeekEntry("June", Color.FromArgb(207, 240, 138)),
+                [26] = new WeekEntry("July", Color.FromArgb(255, 232, 115)),
+                [30] = new WeekEntry("Augustus", Color.FromArgb(229, 193, 161)),
+                [35] = new WeekEntry("September", Color.FromArgb(203, 154, 207)),
+                [39] = new WeekEntry("October", Color.FromArgb(175, 115, 255)),
+                [44] = new WeekEntry("November", Color.FromArgb(155, 154, 255)),
+                [48] = new WeekEntry("December", Color.FromArgb(135, 193, 255))
             };
 
-
-            //draw the chart
             plot.Series.Clear();
             Color color = Color.Black;
             for (int i = 0; i < 52; i++)
@@ -97,8 +122,6 @@ namespace SolarPlot
 
                 plot.Series.Add(seriesName);
                 plot.Series[i].ChartType = SeriesChartType.Area;
-                //plot.Series[i].IsValueShownAsLabel = true;
-                //plot.Series[i].AxisLabel = i.ToString();
                 plot.Series[i].BorderWidth = 1;
                 plot.Series[i].Color = color;
                 plot.Series[i].IsVisibleInLegend = inLegend;
@@ -109,10 +132,9 @@ namespace SolarPlot
 
                 for (int x = 0; x < 48; x++)
                 {
-                    plot.Series[i].Points.AddXY(x, data[2023][i, x]);
+                    plot.Series[i].Points.AddXY(x, data[year][i, x]);
                 }
             }
-            DrawChart(0);
         }
 
         public void DrawChart(int angle)
@@ -120,8 +142,6 @@ namespace SolarPlot
 
             plot.ChartAreas[0].Area3DStyle.Rotation = angle;
         }
-
-        private Dictionary<int, double[,]> data;
 
 
         private void CalcultePoints()

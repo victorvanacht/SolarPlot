@@ -89,7 +89,7 @@ namespace SolarPlot
             else
             {
                 this.dayPlot = new DayPlot(this.dataSet, this.PlotDayGraph);
-                this.yearPlot = new YearPlot(this.dataSet, this.PlotYear);
+                this.yearPlot = new YearPlot(this.dataSet, this.PlotYear, this.YearComboBoxSelectYear);
             }
         }
 
@@ -179,6 +179,18 @@ namespace SolarPlot
         private void YearTrackBarAngle_ValueChanged(object sender, EventArgs e)
         {
             this.yearPlot.DrawChart(this.YearTrackBarAngle.Value);
+        }
+
+        private void YearComboBoxSelectYear_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.yearPlot!=null)
+            {
+                int selectedIndex = this.YearComboBoxSelectYear.SelectedIndex;
+                int year = Int32.Parse(this.YearComboBoxSelectYear.Items[selectedIndex].ToString());
+
+                this.yearPlot.LoadYearDataInChart(year);
+                this.yearPlot.DrawChart(this.YearTrackBarAngle.Value);
+            }
         }
     }
 }

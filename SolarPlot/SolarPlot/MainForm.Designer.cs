@@ -42,6 +42,7 @@
             this.DayCheckBoxIac = new System.Windows.Forms.CheckBox();
             this.DayCheckBoxVac = new System.Windows.Forms.CheckBox();
             this.tabPageYear = new System.Windows.Forms.TabPage();
+            this.YearComboBoxSelectYear = new System.Windows.Forms.ComboBox();
             this.YearTrackBarAngle = new System.Windows.Forms.TrackBar();
             this.PlotYear = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPageDecade = new System.Windows.Forms.TabPage();
@@ -109,6 +110,7 @@
             // 
             // DayCheckBoxKWHr
             // 
+            this.DayCheckBoxKWHr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DayCheckBoxKWHr.AutoSize = true;
             this.DayCheckBoxKWHr.Location = new System.Drawing.Point(302, 435);
             this.DayCheckBoxKWHr.Name = "DayCheckBoxKWHr";
@@ -191,6 +193,7 @@
             // 
             // tabPageYear
             // 
+            this.tabPageYear.Controls.Add(this.YearComboBoxSelectYear);
             this.tabPageYear.Controls.Add(this.YearTrackBarAngle);
             this.tabPageYear.Controls.Add(this.PlotYear);
             this.tabPageYear.Location = new System.Drawing.Point(4, 22);
@@ -201,15 +204,25 @@
             this.tabPageYear.Text = "Year";
             this.tabPageYear.UseVisualStyleBackColor = true;
             // 
+            // YearComboBoxSelectYear
+            // 
+            this.YearComboBoxSelectYear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.YearComboBoxSelectYear.FormattingEnabled = true;
+            this.YearComboBoxSelectYear.Location = new System.Drawing.Point(6, 410);
+            this.YearComboBoxSelectYear.Name = "YearComboBoxSelectYear";
+            this.YearComboBoxSelectYear.Size = new System.Drawing.Size(92, 21);
+            this.YearComboBoxSelectYear.TabIndex = 40;
+            this.YearComboBoxSelectYear.SelectedIndexChanged += new System.EventHandler(this.YearComboBoxSelectYear_SelectedIndexChanged);
+            // 
             // YearTrackBarAngle
             // 
             this.YearTrackBarAngle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.YearTrackBarAngle.Location = new System.Drawing.Point(3, 410);
+            this.YearTrackBarAngle.Location = new System.Drawing.Point(104, 410);
             this.YearTrackBarAngle.Maximum = 180;
             this.YearTrackBarAngle.Minimum = -180;
             this.YearTrackBarAngle.Name = "YearTrackBarAngle";
-            this.YearTrackBarAngle.Size = new System.Drawing.Size(970, 45);
+            this.YearTrackBarAngle.Size = new System.Drawing.Size(869, 45);
             this.YearTrackBarAngle.TabIndex = 39;
             this.YearTrackBarAngle.ValueChanged += new System.EventHandler(this.YearTrackBarAngle_ValueChanged);
             // 
@@ -382,6 +395,7 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart PlotYear;
         private System.Windows.Forms.TrackBar YearTrackBarAngle;
         private System.Windows.Forms.CheckBox DayCheckBoxKWHr;
+        private System.Windows.Forms.ComboBox YearComboBoxSelectYear;
     }
 }
 
