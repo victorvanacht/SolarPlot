@@ -34,6 +34,8 @@ namespace SolarPlot
         {
             InitializeComponent();
 
+            this.Icon = Properties.Resources.SolarPlot;
+
             this.dataSet = new XYDataSet();
             this.worker = new Worker(this);
 

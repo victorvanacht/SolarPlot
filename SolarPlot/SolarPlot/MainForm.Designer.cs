@@ -391,7 +391,7 @@
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
-            this.Text = "Form1";
+            this.Text = "SolarPlot";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormExit_Click);
             this.tabControl.ResumeLayout(false);
             this.tabPageDay.ResumeLayout(false);
