@@ -7,7 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Globalization;
 using static ScottPlot.Plottable.PopulationPlot;
-using static SolarPlot.Worker.LoadCSV;
+using static SolarPlot.Worker.LoadGoodweCSV;
 using System.Data.Common;
 using System.Xml.Linq;
 using ScottPlot;
@@ -23,7 +23,8 @@ namespace SolarPlot
         {
             this.commands = new Dictionary<string, ParsersBase>
             {
-                ["LOADCSV"] = new LoadCSV(this.form),
+                ["LOADGOODWECSV"] = new LoadGoodweCSV(this.form),
+                ["LOADOPENDTUCSV"] = new LoadOpenDTUCSV(this.form),
                 ["CALCULATEENERGYPERPERIOD"] = new CalculateEnergyPerPeriod(this.form),
                 ["PLOTINIT"] = new PlotInit(this.form),
         };
@@ -49,12 +50,12 @@ namespace SolarPlot
         public class ParsersBase
         {
             protected MainForm form;
-            protected XYDataSet dataSet;
+            protected Dictionary<string, Inverter> inverter;
 
             public ParsersBase(MainForm form)
             {
                 this.form = form;
-                this.dataSet = form.dataSet;
+                this.inverter = form.inverter;
             }
 
             virtual public void Parse(string[] commandItems) { }
@@ -71,15 +72,23 @@ namespace SolarPlot
 
         }
 
-        public class LoadCSV : ParsersBase
+        public class LoadGoodweCSV : ParsersBase
         {
-            public LoadCSV(MainForm form) : base(form) { }
+            public LoadGoodweCSV(MainForm form) : base(form) { }
 
             override public void Parse(string[] commandItems)
             {
                 if (File.Exists(commandItems[1]))
                 {
-                    this.dataSet.Clear();
+                    if (this.inverter.ContainsKey("Goodwe"))
+                    {
+                        this.inverter["Goodwe"] = new Inverter("Goodwe");
+                    }
+                    else
+                    {
+                        this.inverter.Add("Goodwe", new Inverter("Goodwe"));
+                    }
+                    XYDataSet dataSet = this.inverter["Goodwe"].dataSet;
 
                     FileInfo fileInfo = new FileInfo(commandItems[1]);
                     Int64 fileSize = fileInfo.Length;
@@ -99,7 +108,7 @@ namespace SolarPlot
                             if (column >= 0)
                             {
                                 columnIndex.Add(name, column);
-                                this.dataSet += name;
+                                dataSet += name;
                             }
                         }
 
@@ -118,12 +127,12 @@ namespace SolarPlot
                                 { 
                                     foreach (KeyValuePair<string,int> kvp in columnIndex)
                                     {
-                                        this.dataSet[kvp.Key] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
+                                        dataSet[kvp.Key] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
                                     }
                                     previousDateTime = dateTime;
                                 }
                             }
-                            this.dataSet.FillRemainingXAxis();
+                            dataSet.FillRemainingXAxis();
                             this.form.SetProgress(0);
                         }
                         else
@@ -138,13 +147,87 @@ namespace SolarPlot
                 }
             }
 
+            public class LoadOpenDTUCSV : ParsersBase
+            {
+                public LoadOpenDTUCSV(MainForm form) : base(form) { }
+
+                override public void Parse(string[] commandItems)
+                {
+                    /*
+                    if (File.Exists(commandItems[1]))
+                    {
+                        this.dataSet.Clear();
+
+                        FileInfo fileInfo = new FileInfo(commandItems[1]);
+                        Int64 fileSize = fileInfo.Length;
+
+                        using (StreamReader file = new StreamReader(commandItems[1]))
+                        {
+                            //first read heading
+                            string[] heading = file.ReadLine().Split(',');
+
+                            int columnIndexTimeStamp = FindInStringArray(heading, "TimeStamp");
+                            string[] columnNames = { "Power", "Iac1", "Iac2", "Iac3", "Vac1", "Vac2", "Vac3", "Freq1", "Freq2", "Freq3", "Ipv1", "Ipv2", "Vpv1", "Vpv2", "Temperature" };
+                            Dictionary<string, int> columnIndex = new Dictionary<string, int>();
+
+                            foreach (string name in columnNames)
+                            {
+                                int column = FindInStringArray(heading, name);
+                                if (column >= 0)
+                                {
+                                    columnIndex.Add(name, column);
+                                    this.dataSet += name;
+                                }
+                            }
+
+                            if ((columnIndexTimeStamp >= 0) && (columnIndex["Power"] >= 0))
+                            {
+                                DateTime previousDateTime = new DateTime();
+                                while (!file.EndOfStream)
+                                {
+                                    string[] line = file.ReadLine().Split(',');
+
+                                    Int64 position = file.BaseStream.Position;
+                                    this.form.SetProgress((int)((position * 100) / fileSize));
+
+                                    DateTime dateTime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
+                                    if (dateTime > previousDateTime) // make sure we only have ascending date times
+                                    {
+                                        foreach (KeyValuePair<string, int> kvp in columnIndex)
+                                        {
+                                            this.dataSet[kvp.Key] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
+                                        }
+                                        previousDateTime = dateTime;
+                                    }
+                                }
+                                this.dataSet.FillRemainingXAxis();
+                                this.form.SetProgress(0);
+                            }
+                            else
+                            {
+                                this.form.SetErrorStatus("File format error.");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        this.form.SetErrorStatus("File not found.");
+                    }
+                    */
+                }
+            }
+
+
             public class CalculateEnergyPerPeriod : ParsersBase
             {
                 public CalculateEnergyPerPeriod(MainForm form) : base (form) {  }
 
                 public override void Parse(string[] commandItems)
                 {
-                    this.dataSet.CalculateEnergyFromPower();
+                    foreach (KeyValuePair<string, Inverter> kvp in inverter)
+                    {
+                        kvp.Value.dataSet.CalculateEnergyFromPower();
+                    }
                 }
 
             }

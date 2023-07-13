@@ -26,12 +26,24 @@ namespace SolarPlot.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string OpenFile {
+        public string OpenGoodweCSVFile {
             get {
-                return ((string)(this["OpenFile"]));
+                return ((string)(this["OpenGoodweCSVFile"]));
             }
             set {
-                this["OpenFile"] = value;
+                this["OpenGoodweCSVFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string OpenOpenDTUCSVFile {
+            get {
+                return ((string)(this["OpenOpenDTUCSVFile"]));
+            }
+            set {
+                this["OpenOpenDTUCSVFile"] = value;
             }
         }
     }

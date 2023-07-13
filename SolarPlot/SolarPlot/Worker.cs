@@ -60,5 +60,17 @@ namespace SolarPlot
         {
             this.form.SetProgress(progress);
         }
+
+        // returns true if closed successfully
+        public bool Close(int maximumWaitingSeconds)
+        {
+            this.workerShouldClose = true;
+            DateTime t0 = DateTime.Now;
+            while ((this.workerHasClosed == false) && (DateTime.Now - t0).TotalSeconds < maximumWaitingSeconds)
+            {
+                Thread.Sleep(10);
+            }
+            return this.workerHasClosed;
+        }
     }
 }

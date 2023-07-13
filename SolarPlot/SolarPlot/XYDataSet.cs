@@ -241,4 +241,16 @@ namespace SolarPlot
             this.dataSet = new Dictionary<string, XYData<double>>();
         }
     }
+
+    public class Inverter
+    {
+        public string name;
+        public XYDataSet dataSet;
+
+        public Inverter(string name)
+        {
+            this.name = name;
+            this.dataSet = new XYDataSet();
+        }
+    }
 }

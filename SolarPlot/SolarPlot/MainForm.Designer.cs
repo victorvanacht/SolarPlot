@@ -28,12 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.PlotDayGraph = new ScottPlot.FormsPlot();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageDay = new System.Windows.Forms.TabPage();
@@ -49,9 +49,12 @@
             this.YearTrackBarAngle = new System.Windows.Forms.TrackBar();
             this.PlotYear = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPageDecade = new System.Windows.Forms.TabPage();
+            this.DecadeTrackBarAngle = new System.Windows.Forms.TrackBar();
+            this.PlotDecade = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openGoodweCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openOpenDTUCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -59,18 +62,16 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
-            this.PlotDecade = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.DecadeTrackBarAngle = new System.Windows.Forms.TrackBar();
             this.tabControl.SuspendLayout();
             this.tabPageDay.SuspendLayout();
             this.tabPageYear.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.YearTrackBarAngle)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PlotYear)).BeginInit();
             this.tabPageDecade.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DecadeTrackBarAngle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PlotDecade)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PlotDecade)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DecadeTrackBarAngle)).BeginInit();
             this.SuspendLayout();
             // 
             // PlotDayGraph
@@ -239,17 +240,17 @@
             this.PlotYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.PlotYear.ChartAreas.Add(chartArea4);
-            legend4.Name = "Legend1";
-            this.PlotYear.Legends.Add(legend4);
+            chartArea1.Name = "ChartArea1";
+            this.PlotYear.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.PlotYear.Legends.Add(legend1);
             this.PlotYear.Location = new System.Drawing.Point(3, 3);
             this.PlotYear.Name = "PlotYear";
             this.PlotYear.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.PlotYear.Series.Add(series4);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.PlotYear.Series.Add(series1);
             this.PlotYear.Size = new System.Drawing.Size(973, 401);
             this.PlotYear.TabIndex = 38;
             this.PlotYear.Text = "PlotYear";
@@ -266,6 +267,38 @@
             this.tabPageDecade.Text = "Decade";
             this.tabPageDecade.UseVisualStyleBackColor = true;
             // 
+            // DecadeTrackBarAngle
+            // 
+            this.DecadeTrackBarAngle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DecadeTrackBarAngle.Location = new System.Drawing.Point(8, 407);
+            this.DecadeTrackBarAngle.Maximum = 180;
+            this.DecadeTrackBarAngle.Minimum = -180;
+            this.DecadeTrackBarAngle.Name = "DecadeTrackBarAngle";
+            this.DecadeTrackBarAngle.Size = new System.Drawing.Size(962, 45);
+            this.DecadeTrackBarAngle.TabIndex = 40;
+            this.DecadeTrackBarAngle.ValueChanged += new System.EventHandler(this.DecadeTrackBarAngle_ValueChanged);
+            // 
+            // PlotDecade
+            // 
+            this.PlotDecade.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            chartArea2.Name = "ChartArea1";
+            this.PlotDecade.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.PlotDecade.Legends.Add(legend2);
+            this.PlotDecade.Location = new System.Drawing.Point(3, 6);
+            this.PlotDecade.Name = "PlotDecade";
+            this.PlotDecade.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.PlotDecade.Series.Add(series2);
+            this.PlotDecade.Size = new System.Drawing.Size(973, 401);
+            this.PlotDecade.TabIndex = 39;
+            this.PlotDecade.Text = "PlotDecade";
+            // 
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -280,23 +313,31 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openCSVToolStripMenuItem,
+            this.openGoodweCSVToolStripMenuItem,
+            this.openOpenDTUCSVToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
-            // openCSVToolStripMenuItem
+            // openGoodweCSVToolStripMenuItem
             // 
-            this.openCSVToolStripMenuItem.Name = "openCSVToolStripMenuItem";
-            this.openCSVToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
-            this.openCSVToolStripMenuItem.Text = "Open CSV";
-            this.openCSVToolStripMenuItem.Click += new System.EventHandler(this.openCSVToolStripMenuItem_Click);
+            this.openGoodweCSVToolStripMenuItem.Name = "openGoodweCSVToolStripMenuItem";
+            this.openGoodweCSVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openGoodweCSVToolStripMenuItem.Text = "Open Goodwe CSV";
+            this.openGoodweCSVToolStripMenuItem.Click += new System.EventHandler(this.openGoodweCSVToolStripMenuItem_Click);
+            // 
+            // openOpenDTUCSVToolStripMenuItem
+            // 
+            this.openOpenDTUCSVToolStripMenuItem.Name = "openOpenDTUCSVToolStripMenuItem";
+            this.openOpenDTUCSVToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openOpenDTUCSVToolStripMenuItem.Text = "Open OpenDTU CSV";
+            this.openOpenDTUCSVToolStripMenuItem.Click += new System.EventHandler(this.openOpenDTUCSVToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.Exit);
             // 
@@ -349,38 +390,6 @@
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
-            // PlotDecade
-            // 
-            this.PlotDecade.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.PlotDecade.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.PlotDecade.Legends.Add(legend3);
-            this.PlotDecade.Location = new System.Drawing.Point(3, 6);
-            this.PlotDecade.Name = "PlotDecade";
-            this.PlotDecade.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.PlotDecade.Series.Add(series3);
-            this.PlotDecade.Size = new System.Drawing.Size(973, 401);
-            this.PlotDecade.TabIndex = 39;
-            this.PlotDecade.Text = "PlotDecade";
-            // 
-            // DecadeTrackBarAngle
-            // 
-            this.DecadeTrackBarAngle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DecadeTrackBarAngle.Location = new System.Drawing.Point(8, 407);
-            this.DecadeTrackBarAngle.Maximum = 180;
-            this.DecadeTrackBarAngle.Minimum = -180;
-            this.DecadeTrackBarAngle.Name = "DecadeTrackBarAngle";
-            this.DecadeTrackBarAngle.Size = new System.Drawing.Size(962, 45);
-            this.DecadeTrackBarAngle.TabIndex = 40;
-            this.DecadeTrackBarAngle.ValueChanged += new System.EventHandler(this.DecadeTrackBarAngle_ValueChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -402,12 +411,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.PlotYear)).EndInit();
             this.tabPageDecade.ResumeLayout(false);
             this.tabPageDecade.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DecadeTrackBarAngle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.PlotDecade)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PlotDecade)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DecadeTrackBarAngle)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -422,7 +431,7 @@
         private System.Windows.Forms.TabPage tabPageDecade;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openCSVToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openGoodweCSVToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
@@ -444,6 +453,7 @@
         private System.Windows.Forms.ComboBox YearComboBoxSelectYear;
         private System.Windows.Forms.TrackBar DecadeTrackBarAngle;
         private System.Windows.Forms.DataVisualization.Charting.Chart PlotDecade;
+        private System.Windows.Forms.ToolStripMenuItem openOpenDTUCSVToolStripMenuItem;
     }
 }
 

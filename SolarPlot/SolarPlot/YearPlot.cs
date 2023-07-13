@@ -37,56 +37,59 @@ namespace SolarPlot
         // ported to C# by OpenAI's ChatGPT
         // a few tiny manual changes to get ChatGPT's work compiling & running
 
-        public YearPlot(XYDataSet dataSet, System.Windows.Forms.DataVisualization.Charting.Chart plot, System.Windows.Forms.ComboBox comboBox)
+        public YearPlot(Dictionary<string, Inverter> inverter, System.Windows.Forms.DataVisualization.Charting.Chart plot, System.Windows.Forms.ComboBox comboBox)
         {
-            this.dataSet = dataSet;
-            this.plot = plot;
-            this.comboBox = comboBox;
-
-            this.CalcultePoints();
-
-            // fill the combobox wih years
-            foreach (KeyValuePair<int, double[,]> kvp in data)
+            foreach (KeyValuePair<string, Inverter> kvpInverter in inverter)
             {
-                this.comboBox.Items.Add(kvp.Key.ToString());
+                this.dataSet = kvpInverter.Value.dataSet;
+                this.plot = plot;
+                this.comboBox = comboBox;
+
+                this.CalcultePoints();
+
+                // fill the combobox wih years
+                foreach (KeyValuePair<int, double[,]> kvp in data)
+                {
+                    this.comboBox.Items.Add(kvp.Key.ToString());
+                }
+                this.comboBox.SelectedIndex = 0;
+
+
+                //setup the chart
+                ChartArea chartArea = plot.ChartAreas[0];
+                chartArea.AxisX.Title = "Time of Day";
+
+                for (int i = 0; i < 48; i++)
+                {
+                    string labelString = "";
+                    if ((i % 2) == 0) labelString += (i / 2).ToString() + ":00";
+                    CustomLabel t = new CustomLabel(i, i + 1, labelString, 0, LabelMarkStyle.None);
+                    chartArea.AxisX.CustomLabels.Add(t);
+                }
+                chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
+                chartArea.AxisX.Minimum = 0;
+                chartArea.AxisX.Maximum = 48;
+                chartArea.AxisX.Interval = 2;
+
+                chartArea.AxisY.Title = "Average kWh";
+                chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
+                chartArea.AxisY.Minimum = 0;
+
+                chartArea.BackColor = Color.FloralWhite; //AntiqueWhite //LightSkyBlue
+                chartArea.BackSecondaryColor = Color.White;
+                chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
+                chartArea.BorderColor = Color.Blue;
+                chartArea.BorderDashStyle = ChartDashStyle.Solid;
+                chartArea.BorderWidth = 1;
+                chartArea.ShadowOffset = 2;
+
+                // Enable 3D charts
+                chartArea.Area3DStyle.Enable3D = true;
+                chartArea.Area3DStyle.Perspective = 2;
+
+                LoadYearDataInChart(data.ElementAtOrDefault(0).Key);
+                DrawChart(0);
             }
-            this.comboBox.SelectedIndex = 0;
-
-
-            //setup the chart
-            ChartArea chartArea = plot.ChartAreas[0];
-            chartArea.AxisX.Title = "Time of Day";
-
-            for (int i = 0; i < 48; i++)
-            {
-                string labelString = "";
-                if ((i%2)==0) labelString += (i/2).ToString()+":00";
-                CustomLabel t = new CustomLabel(i, i+1, labelString, 0, LabelMarkStyle.None);
-                chartArea.AxisX.CustomLabels.Add(t);
-            }
-            chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
-            chartArea.AxisX.Minimum = 0;
-            chartArea.AxisX.Maximum = 48;
-            chartArea.AxisX.Interval = 2;
-
-            chartArea.AxisY.Title = "Average kWh";
-            chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
-            chartArea.AxisY.Minimum = 0;
-
-            chartArea.BackColor = Color.FloralWhite; //AntiqueWhite //LightSkyBlue
-            chartArea.BackSecondaryColor = Color.White;
-            chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
-            chartArea.BorderColor = Color.Blue;
-            chartArea.BorderDashStyle = ChartDashStyle.Solid;
-            chartArea.BorderWidth = 1;
-            chartArea.ShadowOffset = 2;
-
-            // Enable 3D charts
-            chartArea.Area3DStyle.Enable3D = true;
-            chartArea.Area3DStyle.Perspective = 2;
-
-            LoadYearDataInChart(data.ElementAtOrDefault(0).Key);
-            DrawChart(0);
         }
 
         public void LoadYearDataInChart(int year)

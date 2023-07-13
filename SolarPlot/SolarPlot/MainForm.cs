@@ -23,7 +23,7 @@ namespace SolarPlot
 {
     public partial class MainForm : Form
     {
-        internal XYDataSet dataSet;
+        internal Dictionary<string, Inverter> inverter;
         private DayPlot dayPlot;
         private YearPlot yearPlot;
         private DecadePlot decadePlot;
@@ -36,12 +36,12 @@ namespace SolarPlot
 
             this.Icon = Properties.Resources.SolarPlot;
 
-            this.dataSet = new XYDataSet();
+            this.inverter = new Dictionary<string, Inverter>();
             this.worker = new Worker(this);
 
-            if (Properties.Settings.Default.OpenFile != "")
+            if (Properties.Settings.Default.OpenGoodweCSVFile != "")
             {
-                this.worker.Command("LoadCSV " + Properties.Settings.Default.OpenFile);
+                this.worker.Command("LoadCSV " + Properties.Settings.Default.OpenGoodweCSVFile);
                 this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }
@@ -91,9 +91,9 @@ namespace SolarPlot
             }
             else
             {
-                this.dayPlot = new DayPlot(this.dataSet, this.PlotDayGraph);
-                this.yearPlot = new YearPlot(this.dataSet, this.PlotYear, this.YearComboBoxSelectYear);
-                this.decadePlot = new DecadePlot(this.dataSet, this.PlotDecade);
+                this.dayPlot = new DayPlot(this.inverter, this.PlotDayGraph);
+                //this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
+                //this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
             }
         }
 
@@ -102,7 +102,7 @@ namespace SolarPlot
             MessageBox.Show("SolarPlot\nProgrammed by Victor van Acht\n\nhttps://github.com/victorvanacht/SolarPlot");
         }
 
-        private void openCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        private void openGoodweCSVToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|all files (*.*)|*.*";
@@ -111,8 +111,24 @@ namespace SolarPlot
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                Properties.Settings.Default.OpenFile = openFileDialog.FileName;
-                this.worker.Command("LoadCSV " + openFileDialog.FileName);
+                Properties.Settings.Default.OpenGoodweCSVFile = openFileDialog.FileName;
+                this.worker.Command("LoadGoodweCSV " + openFileDialog.FileName);
+                this.worker.Command("CalculateEnergyPerPeriod");
+                this.worker.Command("PlotInit");
+            }
+        }
+
+        private void openOpenDTUCSVToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "csv files (*.csv)|*.csv|txt files (*.txt)|*.txt|all files (*.*)|*.*";
+            openFileDialog.FilterIndex = 0;
+            openFileDialog.RestoreDirectory = true;
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                Properties.Settings.Default.OpenOpenDTUCSVFile = openFileDialog.FileName;
+                this.worker.Command("LoadOpenDTUCSV " + openFileDialog.FileName);
                 this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }
@@ -138,6 +154,7 @@ namespace SolarPlot
         private void Exit(object sender, EventArgs e)
         {
             Properties.Settings.Default.Save();
+            this.worker.Close(5);
             Application.Exit();
         }
 
@@ -201,6 +218,7 @@ namespace SolarPlot
         {
             this.decadePlot.DrawChart(this.DecadeTrackBarAngle.Value);
         }
+
     }
 }
 
