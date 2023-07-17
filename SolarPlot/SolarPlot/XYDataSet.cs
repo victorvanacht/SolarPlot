@@ -242,15 +242,30 @@ namespace SolarPlot
         }
     }
 
+    public class InverterChannel
+    {
+        public string name;
+        public XYDataSet dataSet;
+
+        public InverterChannel(string name)
+        {
+            this.name = name;
+            this.dataSet = new XYDataSet();
+        }
+    }
+
     public class Inverter
     {
         public string name;
         public XYDataSet dataSet;
 
+        public Dictionary<string, InverterChannel> channel;
+
         public Inverter(string name)
         {
             this.name = name;
             this.dataSet = new XYDataSet();
+            this.channel = new Dictionary<string, InverterChannel>();
         }
     }
 }

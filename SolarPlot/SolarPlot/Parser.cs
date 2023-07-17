@@ -12,6 +12,8 @@ using System.Data.Common;
 using System.Xml.Linq;
 using ScottPlot;
 using System.Windows.Forms;
+using System.Runtime.Remoting.Channels;
+using static SolarPlot.XYDataSet;
 
 namespace SolarPlot
 {
@@ -149,15 +151,32 @@ namespace SolarPlot
 
             public class LoadOpenDTUCSV : ParsersBase
             {
+                private class InverterNameTranslator
+                {
+                    public string inverterName;
+                    public Dictionary<int, string> channelNameTranslator;
+
+                    public InverterNameTranslator(string name)
+                    {
+                        inverterName = name;
+                        channelNameTranslator = new Dictionary<int, string>();
+                    }
+                }
+                private Dictionary<string, InverterNameTranslator> inverterNameTranslator;
+                private SortedDictionary<int, XYData<double>> columnGraphTranslator;
+
+                private string[] channelColumnsToSelect = { "current", "voltage", "power" };
+                private string[] inverterColumnsToSelect = { "currentAC", "voltageAC", "powerAC", "frequency", "powerDC", "temperature" };
+
                 public LoadOpenDTUCSV(MainForm form) : base(form) { }
 
                 override public void Parse(string[] commandItems)
                 {
-                    /*
+                    inverterNameTranslator = new Dictionary<string, InverterNameTranslator>();
+                    columnGraphTranslator = new SortedDictionary<int, XYData<double>>();
+
                     if (File.Exists(commandItems[1]))
                     {
-                        this.dataSet.Clear();
-
                         FileInfo fileInfo = new FileInfo(commandItems[1]);
                         Int64 fileSize = fileInfo.Length;
 
@@ -165,55 +184,138 @@ namespace SolarPlot
                         {
                             //first read heading
                             string[] heading = file.ReadLine().Split(',');
+                            // also read first line of data (to extract the name of the inverter)
+                            string[] firstLine = file.ReadLine().Split(',');
+                            for (int i = 0; i < heading.Length; i++)
+                            {
+                                heading[i] = heading[i].Trim();
+                            }
+                            for (int i = 0; i < firstLine.Length; i++)
+                            {
+                                firstLine[i] = firstLine[i].Trim();
+                            }
 
                             int columnIndexTimeStamp = FindInStringArray(heading, "TimeStamp");
-                            string[] columnNames = { "Power", "Iac1", "Iac2", "Iac3", "Vac1", "Vac2", "Vac3", "Freq1", "Freq2", "Freq3", "Ipv1", "Ipv2", "Vpv1", "Vpv2", "Temperature" };
-                            Dictionary<string, int> columnIndex = new Dictionary<string, int>();
-
-                            foreach (string name in columnNames)
+                            for (int columnIndex = 0; columnIndex < heading.Length; columnIndex++)
                             {
-                                int column = FindInStringArray(heading, name);
-                                if (column >= 0)
+                                if (heading[columnIndex].Contains(":"))
                                 {
-                                    columnIndex.Add(name, column);
-                                    this.dataSet += name;
-                                }
-                            }
+                                    string[] subheading = heading[columnIndex].Split(':');
 
-                            if ((columnIndexTimeStamp >= 0) && (columnIndex["Power"] >= 0))
-                            {
-                                DateTime previousDateTime = new DateTime();
-                                while (!file.EndOfStream)
-                                {
-                                    string[] line = file.ReadLine().Split(',');
+                                    string serialNumber = subheading[0].Split('[')[0]; // Split('[') to cut off the channel number, if present
+                                    if (!inverterNameTranslator.ContainsKey(serialNumber))
+                                    { // this is a new inverter
+                                        string name = firstLine[columnIndex];
 
-                                    Int64 position = file.BaseStream.Position;
-                                    this.form.SetProgress((int)((position * 100) / fileSize));
+                                        if (subheading[1].Equals("name"))
+                                        {   // we have found the name of the interter!
+                                            inverterNameTranslator.Add(serialNumber, new InverterNameTranslator(name));
 
-                                    DateTime dateTime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
-                                    if (dateTime > previousDateTime) // make sure we only have ascending date times
-                                    {
-                                        foreach (KeyValuePair<string, int> kvp in columnIndex)
-                                        {
-                                            this.dataSet[kvp.Key] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[kvp.Value], CultureInfo.InvariantCulture));
+                                            // we should check if this inverter is already in the dataset. If so, we need to delete it.
+                                            if (this.inverter.ContainsKey(name))
+                                            {
+                                                this.inverter[name] = new Inverter(name);
+                                            }
+                                            else
+                                            { // we dont have it in the dataset yet, so we should make it.
+                                                this.inverter.Add(name, new Inverter(name));
+                                            }
                                         }
-                                        previousDateTime = dateTime;
+                                    }
+                                    else
+                                    { // we know the name of the inverter, so it is also in the list of inverters of the dataset.
+                                        string inverterName = inverterNameTranslator[serialNumber].inverterName;
+
+                                        // check if it is a column about a channel
+                                        if (heading[columnIndex].Contains("["))
+                                        { // yes it is a column about a channel
+                                            int channelIndex = heading[columnIndex].IndexOf("[") + 1;
+                                            int channel = Int32.Parse(heading[columnIndex].Substring(channelIndex, 1));
+
+                                            //Check if this is a newly discovered channel.
+                                            if (!inverterNameTranslator[serialNumber].channelNameTranslator.ContainsKey(channel))
+                                            { // we need to add it!
+                                                if (subheading[1].Equals("name"))
+                                                {
+                                                    string channelName = firstLine[columnIndex];
+
+                                                    inverterNameTranslator[serialNumber].channelNameTranslator.Add(channel, channelName);
+                                                    // see if we have it already in the dataset. If so, we need to delete it
+                                                    if (inverter[inverterName].channel.ContainsKey(channelName))
+                                                    { // yes it exists. We need to delete it
+                                                        inverter[inverterName].channel[channelName] = new InverterChannel(channelName);
+                                                    }
+                                                    else
+                                                    { // no it does not exist, we need to add it.
+                                                        inverter[inverterName].channel.Add(channelName, new InverterChannel(channelName));
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            { // this is a known channel
+                                                string channelName = inverterNameTranslator[serialNumber].channelNameTranslator[channel];
+
+                                                foreach (string columnName in channelColumnsToSelect)
+                                                {
+                                                    if (columnName.Equals(subheading[1]))
+                                                    {
+                                                        string graphName = subheading[1];
+                                                        inverter[inverterName].channel[channelName].dataSet += graphName;
+                                                        this.columnGraphTranslator.Add(columnIndex, this.inverter[inverterName].channel[channelName].dataSet[graphName]);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        { // no we are reading a general inverter information
+                                            foreach (string columnName in inverterColumnsToSelect)
+                                            {
+                                                if (columnName.Equals(subheading[1]))
+                                                {
+                                                    string graphName = subheading[1];
+                                                    inverter[inverterName].dataSet += graphName;
+                                                    this.columnGraphTranslator.Add(columnIndex, this.inverter[inverterName].dataSet[graphName]);
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                this.dataSet.FillRemainingXAxis();
-                                this.form.SetProgress(0);
                             }
-                            else
+
+                            DateTime previousDateTime = new DateTime();
+                            while (!file.EndOfStream)
                             {
-                                this.form.SetErrorStatus("File format error.");
+                                string[] line = file.ReadLine().Split(',');
+
+                                Int64 position = file.BaseStream.Position;
+                                this.form.SetProgress((int)((position * 100) / fileSize));
+
+                                DateTime dateTime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
+                                if (dateTime > previousDateTime) // make sure we only have ascending date times
+                                {
+                                    for (int columnIndex = 0; columnIndex < line.Length; columnIndex++)
+                                    {
+                                        if (columnGraphTranslator.ContainsKey(columnIndex))
+                                        {
+                                            columnGraphTranslator[columnIndex] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[columnIndex], CultureInfo.InvariantCulture));
+                                        }
+                                    }
+                                    previousDateTime = dateTime;
+                                }
                             }
+
+
+                            foreach (KeyValuePair<int, XYData<double>> kvp in columnGraphTranslator)
+                            {
+                                kvp.Value.FillRemainingXAxis();
+                            }
+                            this.form.SetProgress(0);
                         }
                     }
                     else
                     {
                         this.form.SetErrorStatus("File not found.");
                     }
-                    */
                 }
             }
 
