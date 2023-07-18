@@ -41,7 +41,7 @@ namespace SolarPlot
 
             if (Properties.Settings.Default.OpenGoodweCSVFile != "")
             {
-                this.worker.Command("LoadCSV " + Properties.Settings.Default.OpenGoodweCSVFile);
+                this.worker.Command("LoadGoodWeCSV " + Properties.Settings.Default.OpenGoodweCSVFile);
                 this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }

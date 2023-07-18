@@ -189,7 +189,7 @@ namespace SolarPlot
 
         public void CalculateEnergyFromPower()
         {
-            if (dataSet.ContainsKey("Power"))
+            if (dataSet.ContainsKey("Power") && (!dataSet.ContainsKey("EnergyPerDay")))
             {
                 XYData<double> power = this.dataSet["Power"];
 

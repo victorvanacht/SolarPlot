@@ -165,8 +165,8 @@ namespace SolarPlot
                 private Dictionary<string, InverterNameTranslator> inverterNameTranslator;
                 private SortedDictionary<int, XYData<double>> columnGraphTranslator;
 
-                private string[] channelColumnsToSelect = { "current", "voltage", "power" };
-                private string[] inverterColumnsToSelect = { "currentAC", "voltageAC", "powerAC", "frequency", "powerDC", "temperature" };
+                private string[] channelColumnsToSelect = { "Current", "Voltage", "Power" };
+                private string[] inverterColumnsToSelect = { "CurrentAC", "VoltageAC", "Power", "Frequency", "PowerDC", "Temperature" };
 
                 public LoadOpenDTUCSV(MainForm form) : base(form) { }
 
@@ -207,7 +207,7 @@ namespace SolarPlot
                                     { // this is a new inverter
                                         string name = firstLine[columnIndex];
 
-                                        if (subheading[1].Equals("name"))
+                                        if (subheading[1].Equals("Name"))
                                         {   // we have found the name of the interter!
                                             inverterNameTranslator.Add(serialNumber, new InverterNameTranslator(name));
 
@@ -235,7 +235,7 @@ namespace SolarPlot
                                             //Check if this is a newly discovered channel.
                                             if (!inverterNameTranslator[serialNumber].channelNameTranslator.ContainsKey(channel))
                                             { // we need to add it!
-                                                if (subheading[1].Equals("name"))
+                                                if (subheading[1].Equals("Name"))
                                                 {
                                                     string channelName = firstLine[columnIndex];
 

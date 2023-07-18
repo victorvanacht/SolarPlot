@@ -120,6 +120,16 @@ namespace SolarPlot
             ["Temperature"] = new LineProperty(Color.Purple, Color.Purple, false, false, 0, 1),
             ["EnergyPerDay"] = new LineProperty(Color.Purple, Color.Purple, false, true, 0.8, 1),
             ["EnergyPerHalfHour"] = new LineProperty(Color.Purple, Color.Purple, false, true, 0.8/48, 1),
+
+            ["CurrentAC"] = new LineProperty(Color.Red, Color.Red, false, false, 0, 1),
+            ["VoltageAC"] = new LineProperty(Color.Blue, Color.Blue, false, false, 0, 1),
+            ["Frequency"] = new LineProperty(Color.Green, Color.Green, false, false, 0, 1),
+            ["PowerDC"] = new LineProperty(Color.Blue, Color.Blue, false, false, 0, 1),
+            ["Temperature"] = new LineProperty(Color.Purple, Color.Purple, false, false, 0, 1),
+
+            ["Current"] = new LineProperty(Color.Red, Color.Red, false, false, 0, 1),
+            ["Voltage"] = new LineProperty(Color.Blue, Color.Blue, false, false, 0, 1),
+
         };
 
         public DayPlot(Dictionary<string, Inverter> inverter, ScottPlot.FormsPlot plot)
