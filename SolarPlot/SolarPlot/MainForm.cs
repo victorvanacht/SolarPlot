@@ -91,11 +91,16 @@ namespace SolarPlot
             }
             else
             {
-                this.dayPlot = new DayPlot(this.inverter, this.PlotDayGraph);
-                //this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
-                //this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
+                this.comboBoxDayPlotInverterSelection.Items.Clear();
+                foreach (KeyValuePair<string, Inverter> kvp in this.inverter)
+                {
+                    this.comboBoxDayPlotInverterSelection.Items.Add(kvp.Key);
+                }
+                this.comboBoxDayPlotInverterSelection.SelectedIndex = 0;
             }
         }
+
+
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -219,6 +224,17 @@ namespace SolarPlot
             this.decadePlot.DrawChart(this.DecadeTrackBarAngle.Value);
         }
 
+        private void comboBoxDayPlotInverterSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedInverter = this.comboBoxDayPlotInverterSelection.GetItemText(this.comboBoxDayPlotInverterSelection.SelectedItem);
+
+            this.dayPlot = new DayPlot(this.inverter[selectedInverter], this.PlotDayGraph);
+            /*
+            this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
+            this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
+            */
+
+        }
     }
 }
 

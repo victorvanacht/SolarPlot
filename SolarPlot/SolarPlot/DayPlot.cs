@@ -132,54 +132,51 @@ namespace SolarPlot
 
         };
 
-        public DayPlot(Dictionary<string, Inverter> inverter, ScottPlot.FormsPlot plot)
+        public DayPlot(Inverter inverter, ScottPlot.FormsPlot plot)
         {
-            foreach (KeyValuePair<string, Inverter> kvpInverter in inverter)
+            this.dataSet = inverter.dataSet;
+            this.plot = plot;
+            this.lines = new Dictionary<string, Line>();
+
+            this.plot.Plot.Clear();
+
+            // first add the bar graphs, so they will be in the back ground
+            string[] barNames = { "EnergyPerDay", "EnergyPerHalfHour" };
+            foreach (string barName in barNames)
             {
-                this.dataSet = kvpInverter.Value.dataSet;
-                this.plot = plot;
-                this.lines = new Dictionary<string, Line>();
+                lines.Add(barName, new Line(plot, barName, dataSet[barName].x, dataSet[barName].y, lineProperties[barName].color, lineProperties[barName].fillColor, lineProperties[barName].fill, lineProperties[barName].bar, lineProperties[barName].barThickness, lineProperties[barName].axisIndex));
+            }
 
-                this.plot.Plot.Clear();
 
-                // first add the bar graphs, so they will be in the back ground
-                string[] barNames = { "EnergyPerDay", "EnergyPerHalfHour" };
+            foreach (KeyValuePair<string, XYData<double>> kvp in dataSet)
+            {
+                bool isBar = false;
                 foreach (string barName in barNames)
                 {
-                    lines.Add(barName, new Line(plot, barName, dataSet[barName].x, dataSet[barName].y, lineProperties[barName].color, lineProperties[barName].fillColor, lineProperties[barName].fill, lineProperties[barName].bar, lineProperties[barName].barThickness, lineProperties[barName].axisIndex));
+                    if (barName.Equals(kvp.Key))
+                    {
+                        isBar = true;
+                    }
                 }
-
-
-                foreach (KeyValuePair<string, XYData<double>> kvp in dataSet)
+                if (!isBar)
                 {
-                    bool isBar = false;
-                    foreach (string barName in barNames)
-                    {
-                        if (barName.Equals(kvp.Key))
-                        {
-                            isBar = true;
-                        }
-                    }
-                    if (!isBar)
-                    {
-                        string name = kvp.Key;
-                        LineProperty prop = lineProperties[name];
-                        lines.Add(name, new Line(plot, name, kvp.Value.x, kvp.Value.y, prop.color, prop.fillColor, prop.fill, prop.bar, prop.barThickness, prop.axisIndex));
-                    }
+                    string name = kvp.Key;
+                    LineProperty prop = lineProperties[name];
+                    lines.Add(name, new Line(plot, name, kvp.Value.x, kvp.Value.y, prop.color, prop.fillColor, prop.fill, prop.bar, prop.barThickness, prop.axisIndex));
                 }
-                this.plot.Plot.XAxis.DateTimeFormat(true);
-                this.legend = this.plot.Plot.Legend();
-                this.legend.Orientation = ScottPlot.Orientation.Vertical;
-                this.legend.Location = ScottPlot.Alignment.UpperLeft;
-                this.legend.FontSize = 9;
-                this.plot.Plot.XLabel("Date/Time");
-
-                this.AutoRangeXAxis();
-                this.AutoRangeYAxis(new string[] { "Power" }, 0);
-                this.AutoRangeYAxis(new string[] { "EnergyPerDay" }, 1);
-                this.plot.Configuration.LockVerticalAxis = true;
-                this.plot.Refresh();
             }
+            this.plot.Plot.XAxis.DateTimeFormat(true);
+            this.legend = this.plot.Plot.Legend();
+            this.legend.Orientation = ScottPlot.Orientation.Vertical;
+            this.legend.Location = ScottPlot.Alignment.UpperLeft;
+            this.legend.FontSize = 9;
+            this.plot.Plot.XLabel("Date/Time");
+
+            this.AutoRangeXAxis();
+            this.AutoRangeYAxis(new string[] { "Power" }, 0);
+            this.AutoRangeYAxis(new string[] { "EnergyPerDay" }, 1);
+            this.plot.Configuration.LockVerticalAxis = true;
+            this.plot.Refresh();
         }
 
 
