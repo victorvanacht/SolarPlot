@@ -92,9 +92,13 @@ namespace SolarPlot
             else
             {
                 this.comboBoxDayPlotInverterSelection.Items.Clear();
-                foreach (KeyValuePair<string, Inverter> kvp in this.inverter)
+                foreach (KeyValuePair<string, Inverter> kvpInverter in this.inverter)
                 {
-                    this.comboBoxDayPlotInverterSelection.Items.Add(kvp.Key);
+                    this.comboBoxDayPlotInverterSelection.Items.Add(kvpInverter.Key);
+                    foreach (KeyValuePair<string, InverterChannel> kvpChannel in kvpInverter.Value.channel)
+                    {
+                        this.comboBoxDayPlotInverterSelection.Items.Add(kvpInverter.Key + ":" + kvpChannel.Key);
+                    }
                 }
                 this.comboBoxDayPlotInverterSelection.SelectedIndex = 0;
             }
@@ -226,9 +230,18 @@ namespace SolarPlot
 
         private void comboBoxDayPlotInverterSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selectedInverter = this.comboBoxDayPlotInverterSelection.GetItemText(this.comboBoxDayPlotInverterSelection.SelectedItem);
-
-            this.dayPlot = new DayPlot(this.inverter[selectedInverter], this.PlotDayGraph);
+            string selectedInverterChannel = this.comboBoxDayPlotInverterSelection.GetItemText(this.comboBoxDayPlotInverterSelection.SelectedItem);
+            if (selectedInverterChannel.Contains(":"))
+            {
+                int index = selectedInverterChannel.IndexOf(":");
+                string selectedInverter = selectedInverterChannel.Substring(0,index);
+                string selectedChannel = selectedInverterChannel.Substring(index+ 1);
+                this.dayPlot = new DayPlot(this.inverter[selectedInverter].channel[selectedChannel].dataSet, this.PlotDayGraph);
+            }
+            else
+            {
+                this.dayPlot = new DayPlot(this.inverter[selectedInverterChannel].dataSet, this.PlotDayGraph);
+            }
             /*
             this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
             this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);

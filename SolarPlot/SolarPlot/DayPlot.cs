@@ -132,9 +132,9 @@ namespace SolarPlot
 
         };
 
-        public DayPlot(Inverter inverter, ScottPlot.FormsPlot plot)
+        public DayPlot(XYDataSet dataSet, ScottPlot.FormsPlot plot)
         {
-            this.dataSet = inverter.dataSet;
+            this.dataSet = dataSet;
             this.plot = plot;
             this.lines = new Dictionary<string, Line>();
 

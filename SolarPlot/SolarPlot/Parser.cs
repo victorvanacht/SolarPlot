@@ -326,9 +326,13 @@ namespace SolarPlot
 
                 public override void Parse(string[] commandItems)
                 {
-                    foreach (KeyValuePair<string, Inverter> kvp in inverter)
+                    foreach (KeyValuePair<string, Inverter> kvpInverter in inverter)
                     {
-                        kvp.Value.dataSet.CalculateEnergyFromPower();
+                        kvpInverter.Value.dataSet.CalculateEnergyFromPower();
+                        foreach(KeyValuePair<string, InverterChannel> kvpChannel in kvpInverter.Value.channel)
+                        {
+                            kvpChannel.Value.dataSet.CalculateEnergyFromPower();
+                        }
                     }
                 }
 
