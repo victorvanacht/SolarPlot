@@ -39,9 +39,19 @@ namespace SolarPlot
             this.inverter = new Dictionary<string, Inverter>();
             this.worker = new Worker(this);
 
+            bool loaded = false;
             if (Properties.Settings.Default.OpenGoodweCSVFile != "")
             {
                 this.worker.Command("LoadGoodWeCSV " + Properties.Settings.Default.OpenGoodweCSVFile);
+                loaded = true;
+            }
+            if (Properties.Settings.Default.OpenOpenDTUCSVFile != "")
+            {
+                this.worker.Command("LoadOpenDTUCSV " + Properties.Settings.Default.OpenOpenDTUCSVFile);
+                loaded = true;
+            }
+            if (loaded)
+            {
                 this.worker.Command("CalculateEnergyPerPeriod");
                 this.worker.Command("PlotInit");
             }
