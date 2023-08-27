@@ -26,7 +26,6 @@ namespace SolarPlot
             }
         }
 
-        XYDataSet dataSet;
         System.Windows.Forms.DataVisualization.Charting.Chart plot;
         System.Windows.Forms.ComboBox comboBox;
 
@@ -171,31 +170,6 @@ namespace SolarPlot
         {
 
             plot.ChartAreas[0].Area3DStyle.Rotation = angle;
-        }
-
-
-        private void CalcultePoints()
-        {
-            data = new Dictionary<int, double[,]>();
-            double[] x = this.dataSet["EnergyPerHalfHour"].x;
-            double[] y = this.dataSet["EnergyPerHalfHour"].y;
-
-            int year = DateTime.FromOADate(this.dataSet["EnergyPerHalfHour"].Xmin).Year;
-            data.Add(year, new double[52, 48]);
-            int end = this.dataSet["EnergyPerHalfHour"].count;
-            for (int index =0; index< end; index ++)
-            {
-                DateTime t = DateTime.FromOADate(x[index]);
-                if (t.Year != year) 
-                {
-                    year = t.Year;
-                    data.Add(year, new double[52, 48]);
-
-                }
-                int week = (int)(t.DayOfYear / 7);
-                int hr = t.Hour * 2 + (int)(t.Minute / 30);
-                data[year][week, hr] += y[index] /7; // divide by 7 because we add up over a week.
-            }
         }
     }
 }
