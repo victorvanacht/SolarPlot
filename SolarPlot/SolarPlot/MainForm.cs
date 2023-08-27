@@ -104,8 +104,6 @@ namespace SolarPlot
             }
         }
 
-
-
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("SolarPlot\nProgrammed by Victor van Acht\n\nhttps://github.com/victorvanacht/SolarPlot");
@@ -167,45 +165,6 @@ namespace SolarPlot
             Application.Exit();
         }
 
-
-        private volatile bool dayPlotSelectionChanging = false;
-        private Dictionary<string, string[]> selectionNames = new Dictionary<string, string[]>() 
-        {
-            ["Vpv"] = new string[] { "Vpv1", "Vpv2" },
-            ["Ipv"] = new string[] { "Ipv1", "Ipv2" },
-            ["Vac"] = new string[] { "Vac1", "Vac2", "Vac3" },
-            ["Iac"] = new string[] { "Iac1", "Iac2", "Iac3" },
-            ["Fac"] = new string[] { "Freq1", "Freq2", "Freq3" },
-            ["Temp"] = new string[] { "Temperature" },
-            ["kWHr"] = new string[] { "EnergyPerDay", "EnergyPerHalfHour" },
-
-        };
-
-        private void ProcessDayPlotSelectionChanged(object sender, EventArgs e)
-        {
-            if (!dayPlotSelectionChanging) // when we are going to change the selection of the other boxes, they will generate this event as well. So we need to ignore those events
-            {
-                dayPlotSelectionChanging = true;
-                System.Windows.Forms.CheckBox[] dayPlotSelectionBoxes = { this.DayCheckBoxVpv, this.DayCheckBoxIpv, this.DayCheckBoxVac, this.DayCheckBoxIac, this.DayCheckBoxFac, this.DayCheckBoxTemp, this.DayCheckBoxKWHr};
-                foreach (CheckBox checkbox in dayPlotSelectionBoxes)
-                {
-                    bool visibility = (checkbox == sender);
-                    checkbox.Checked = visibility;
-
-                    string[] selection = selectionNames[checkbox.Text];
-                    this.dayPlot.EnableLine(selection, visibility);
-                    if (visibility)
-                    {
-                        this.dayPlot.AutoRangeYAxis(selection, 1);
-                    }
-
-                    this.PlotDayGraph.Refresh();
-
-                }
-                dayPlotSelectionChanging = false;
-            }
-        }
-
         private void YearTrackBarAngle_ValueChanged(object sender, EventArgs e)
         {
             this.yearPlot.DrawChart(this.YearTrackBarAngle.Value);
@@ -242,11 +201,22 @@ namespace SolarPlot
             {
                 this.dayPlot = new DayPlot(this.inverter[selectedInverterChannel].dataSet, this.PlotDayGraph);
             }
+
+            this.comboBoxDayPlotLineSelection.Items.Clear();
+            this.comboBoxDayPlotLineSelection.Items.AddRange(this.dayPlot.GetLineNames());
+            this.comboBoxDayPlotLineSelection.SelectedIndex= 0;
+
+
             /*
             this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
             this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
             */
 
+        }
+
+        private void comboBoxDayPlotLineSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.dayPlot.EnableLine(this.comboBoxDayPlotLineSelection.SelectedItem.ToString());
         }
     }
 }

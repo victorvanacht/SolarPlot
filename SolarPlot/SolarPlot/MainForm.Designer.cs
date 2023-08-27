@@ -28,22 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.PlotDayGraph = new ScottPlot.FormsPlot();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.tabPageDay = new System.Windows.Forms.TabPage();
-            this.DayCheckBoxKWHr = new System.Windows.Forms.CheckBox();
-            this.DayCheckBoxTemp = new System.Windows.Forms.CheckBox();
-            this.DayCheckBoxFac = new System.Windows.Forms.CheckBox();
-            this.DayCheckBoxIpv = new System.Windows.Forms.CheckBox();
-            this.DayCheckBoxVpv = new System.Windows.Forms.CheckBox();
-            this.DayCheckBoxIac = new System.Windows.Forms.CheckBox();
-            this.DayCheckBoxVac = new System.Windows.Forms.CheckBox();
+            this.comboBoxDayPlotLineSelection = new System.Windows.Forms.ComboBox();
+            this.comboBoxDayPlotInverterSelection = new System.Windows.Forms.ComboBox();
             this.tabPageYear = new System.Windows.Forms.TabPage();
             this.YearComboBoxSelectYear = new System.Windows.Forms.ComboBox();
             this.YearTrackBarAngle = new System.Windows.Forms.TrackBar();
@@ -62,7 +57,6 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
-            this.comboBoxDayPlotInverterSelection = new System.Windows.Forms.ComboBox();
             this.tabControl.SuspendLayout();
             this.tabPageDay.SuspendLayout();
             this.tabPageYear.SuspendLayout();
@@ -102,14 +96,8 @@
             // 
             // tabPageDay
             // 
+            this.tabPageDay.Controls.Add(this.comboBoxDayPlotLineSelection);
             this.tabPageDay.Controls.Add(this.comboBoxDayPlotInverterSelection);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxKWHr);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxTemp);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxFac);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxIpv);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxVpv);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxIac);
-            this.tabPageDay.Controls.Add(this.DayCheckBoxVac);
             this.tabPageDay.Controls.Add(this.PlotDayGraph);
             this.tabPageDay.Location = new System.Drawing.Point(4, 22);
             this.tabPageDay.Name = "tabPageDay";
@@ -119,88 +107,24 @@
             this.tabPageDay.Text = "Day";
             this.tabPageDay.UseVisualStyleBackColor = true;
             // 
-            // DayCheckBoxKWHr
+            // comboBoxDayPlotLineSelection
             // 
-            this.DayCheckBoxKWHr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxKWHr.AutoSize = true;
-            this.DayCheckBoxKWHr.Location = new System.Drawing.Point(532, 435);
-            this.DayCheckBoxKWHr.Name = "DayCheckBoxKWHr";
-            this.DayCheckBoxKWHr.Size = new System.Drawing.Size(54, 17);
-            this.DayCheckBoxKWHr.TabIndex = 41;
-            this.DayCheckBoxKWHr.Text = "kWHr";
-            this.DayCheckBoxKWHr.UseVisualStyleBackColor = true;
-            this.DayCheckBoxKWHr.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            this.comboBoxDayPlotLineSelection.FormattingEnabled = true;
+            this.comboBoxDayPlotLineSelection.Location = new System.Drawing.Point(785, 433);
+            this.comboBoxDayPlotLineSelection.Name = "comboBoxDayPlotLineSelection";
+            this.comboBoxDayPlotLineSelection.Size = new System.Drawing.Size(163, 21);
+            this.comboBoxDayPlotLineSelection.TabIndex = 43;
+            this.comboBoxDayPlotLineSelection.SelectedIndexChanged += new System.EventHandler(this.comboBoxDayPlotLineSelection_SelectedIndexChanged);
             // 
-            // DayCheckBoxTemp
+            // comboBoxDayPlotInverterSelection
             // 
-            this.DayCheckBoxTemp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxTemp.Location = new System.Drawing.Point(481, 431);
-            this.DayCheckBoxTemp.Name = "DayCheckBoxTemp";
-            this.DayCheckBoxTemp.Size = new System.Drawing.Size(54, 24);
-            this.DayCheckBoxTemp.TabIndex = 40;
-            this.DayCheckBoxTemp.Text = "Temp";
-            this.DayCheckBoxTemp.UseVisualStyleBackColor = true;
-            this.DayCheckBoxTemp.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
-            // 
-            // DayCheckBoxFac
-            // 
-            this.DayCheckBoxFac.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxFac.AutoSize = true;
-            this.DayCheckBoxFac.Location = new System.Drawing.Point(431, 435);
-            this.DayCheckBoxFac.Name = "DayCheckBoxFac";
-            this.DayCheckBoxFac.Size = new System.Drawing.Size(44, 17);
-            this.DayCheckBoxFac.TabIndex = 39;
-            this.DayCheckBoxFac.Text = "Fac";
-            this.DayCheckBoxFac.UseVisualStyleBackColor = true;
-            this.DayCheckBoxFac.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
-            // 
-            // DayCheckBoxIpv
-            // 
-            this.DayCheckBoxIpv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxIpv.AutoSize = true;
-            this.DayCheckBoxIpv.Location = new System.Drawing.Point(292, 435);
-            this.DayCheckBoxIpv.Name = "DayCheckBoxIpv";
-            this.DayCheckBoxIpv.Size = new System.Drawing.Size(41, 17);
-            this.DayCheckBoxIpv.TabIndex = 38;
-            this.DayCheckBoxIpv.Text = "Ipv";
-            this.DayCheckBoxIpv.UseVisualStyleBackColor = true;
-            this.DayCheckBoxIpv.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
-            // 
-            // DayCheckBoxVpv
-            // 
-            this.DayCheckBoxVpv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxVpv.AutoSize = true;
-            this.DayCheckBoxVpv.Location = new System.Drawing.Point(241, 435);
-            this.DayCheckBoxVpv.Name = "DayCheckBoxVpv";
-            this.DayCheckBoxVpv.Size = new System.Drawing.Size(45, 17);
-            this.DayCheckBoxVpv.TabIndex = 37;
-            this.DayCheckBoxVpv.Text = "Vpv";
-            this.DayCheckBoxVpv.UseVisualStyleBackColor = true;
-            this.DayCheckBoxVpv.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
-            // 
-            // DayCheckBoxIac
-            // 
-            this.DayCheckBoxIac.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxIac.AutoSize = true;
-            this.DayCheckBoxIac.Location = new System.Drawing.Point(384, 435);
-            this.DayCheckBoxIac.Name = "DayCheckBoxIac";
-            this.DayCheckBoxIac.Size = new System.Drawing.Size(41, 17);
-            this.DayCheckBoxIac.TabIndex = 36;
-            this.DayCheckBoxIac.Text = "Iac";
-            this.DayCheckBoxIac.UseVisualStyleBackColor = true;
-            this.DayCheckBoxIac.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
-            // 
-            // DayCheckBoxVac
-            // 
-            this.DayCheckBoxVac.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DayCheckBoxVac.AutoSize = true;
-            this.DayCheckBoxVac.Location = new System.Drawing.Point(333, 435);
-            this.DayCheckBoxVac.Name = "DayCheckBoxVac";
-            this.DayCheckBoxVac.Size = new System.Drawing.Size(45, 17);
-            this.DayCheckBoxVac.TabIndex = 35;
-            this.DayCheckBoxVac.Text = "Vac";
-            this.DayCheckBoxVac.UseVisualStyleBackColor = true;
-            this.DayCheckBoxVac.CheckedChanged += new System.EventHandler(this.ProcessDayPlotSelectionChanged);
+            this.comboBoxDayPlotInverterSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxDayPlotInverterSelection.FormattingEnabled = true;
+            this.comboBoxDayPlotInverterSelection.Location = new System.Drawing.Point(6, 433);
+            this.comboBoxDayPlotInverterSelection.Name = "comboBoxDayPlotInverterSelection";
+            this.comboBoxDayPlotInverterSelection.Size = new System.Drawing.Size(183, 21);
+            this.comboBoxDayPlotInverterSelection.TabIndex = 42;
+            this.comboBoxDayPlotInverterSelection.SelectedIndexChanged += new System.EventHandler(this.comboBoxDayPlotInverterSelection_SelectedIndexChanged);
             // 
             // tabPageYear
             // 
@@ -242,17 +166,17 @@
             this.PlotYear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea3.Name = "ChartArea1";
-            this.PlotYear.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.PlotYear.Legends.Add(legend3);
+            chartArea1.Name = "ChartArea1";
+            this.PlotYear.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.PlotYear.Legends.Add(legend1);
             this.PlotYear.Location = new System.Drawing.Point(3, 3);
             this.PlotYear.Name = "PlotYear";
             this.PlotYear.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.PlotYear.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.PlotYear.Series.Add(series1);
             this.PlotYear.Size = new System.Drawing.Size(973, 401);
             this.PlotYear.TabIndex = 38;
             this.PlotYear.Text = "PlotYear";
@@ -286,17 +210,17 @@
             this.PlotDecade.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            chartArea4.Name = "ChartArea1";
-            this.PlotDecade.ChartAreas.Add(chartArea4);
-            legend4.Name = "Legend1";
-            this.PlotDecade.Legends.Add(legend4);
+            chartArea2.Name = "ChartArea1";
+            this.PlotDecade.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.PlotDecade.Legends.Add(legend2);
             this.PlotDecade.Location = new System.Drawing.Point(3, 6);
             this.PlotDecade.Name = "PlotDecade";
             this.PlotDecade.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.EarthTones;
-            series4.ChartArea = "ChartArea1";
-            series4.Legend = "Legend1";
-            series4.Name = "Series1";
-            this.PlotDecade.Series.Add(series4);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.PlotDecade.Series.Add(series2);
             this.PlotDecade.Size = new System.Drawing.Size(973, 401);
             this.PlotDecade.TabIndex = 39;
             this.PlotDecade.Text = "PlotDecade";
@@ -392,15 +316,6 @@
             this.toolStripProgressBar.Name = "toolStripProgressBar";
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
             // 
-            // comboBoxDayPlotInverterSelection
-            // 
-            this.comboBoxDayPlotInverterSelection.FormattingEnabled = true;
-            this.comboBoxDayPlotInverterSelection.Location = new System.Drawing.Point(8, 431);
-            this.comboBoxDayPlotInverterSelection.Name = "comboBoxDayPlotInverterSelection";
-            this.comboBoxDayPlotInverterSelection.Size = new System.Drawing.Size(183, 21);
-            this.comboBoxDayPlotInverterSelection.TabIndex = 42;
-            this.comboBoxDayPlotInverterSelection.SelectedIndexChanged += new System.EventHandler(this.comboBoxDayPlotInverterSelection_SelectedIndexChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,7 +330,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormExit_Click);
             this.tabControl.ResumeLayout(false);
             this.tabPageDay.ResumeLayout(false);
-            this.tabPageDay.PerformLayout();
             this.tabPageYear.ResumeLayout(false);
             this.tabPageYear.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.YearTrackBarAngle)).EndInit();
@@ -450,22 +364,16 @@
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.CheckBox DayCheckBoxVac;
-        private System.Windows.Forms.CheckBox DayCheckBoxIpv;
-        private System.Windows.Forms.CheckBox DayCheckBoxVpv;
-        private System.Windows.Forms.CheckBox DayCheckBoxIac;
-        private System.Windows.Forms.CheckBox DayCheckBoxTemp;
-        private System.Windows.Forms.CheckBox DayCheckBoxFac;
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.DataVisualization.Charting.Chart PlotYear;
         private System.Windows.Forms.TrackBar YearTrackBarAngle;
-        private System.Windows.Forms.CheckBox DayCheckBoxKWHr;
         private System.Windows.Forms.ComboBox YearComboBoxSelectYear;
         private System.Windows.Forms.TrackBar DecadeTrackBarAngle;
         private System.Windows.Forms.DataVisualization.Charting.Chart PlotDecade;
         private System.Windows.Forms.ToolStripMenuItem openOpenDTUCSVToolStripMenuItem;
         private System.Windows.Forms.ComboBox comboBoxDayPlotInverterSelection;
+        private System.Windows.Forms.ComboBox comboBoxDayPlotLineSelection;
     }
 }
 
