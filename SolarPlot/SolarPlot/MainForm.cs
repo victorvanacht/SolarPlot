@@ -101,6 +101,9 @@ namespace SolarPlot
                     }
                 }
                 this.comboBoxDayPlotInverterSelection.SelectedIndex = 0;
+
+                this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
+                //this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
             }
         }
 
@@ -205,13 +208,6 @@ namespace SolarPlot
             this.comboBoxDayPlotLineSelection.Items.Clear();
             this.comboBoxDayPlotLineSelection.Items.AddRange(this.dayPlot.GetLineNames());
             this.comboBoxDayPlotLineSelection.SelectedIndex= 0;
-
-
-            /*
-            this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
-            this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
-            */
-
         }
 
         private void comboBoxDayPlotLineSelection_SelectedIndexChanged(object sender, EventArgs e)

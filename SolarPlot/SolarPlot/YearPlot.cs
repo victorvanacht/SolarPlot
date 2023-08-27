@@ -39,57 +39,84 @@ namespace SolarPlot
 
         public YearPlot(Dictionary<string, Inverter> inverter, System.Windows.Forms.DataVisualization.Charting.Chart plot, System.Windows.Forms.ComboBox comboBox)
         {
+            this.plot = plot;
+            this.comboBox = comboBox;
+
+            // Calculate data
+            data = new Dictionary<int, double[,]>();
             foreach (KeyValuePair<string, Inverter> kvpInverter in inverter)
             {
-                this.dataSet = kvpInverter.Value.dataSet;
-                this.plot = plot;
-                this.comboBox = comboBox;
+                Inverter inverterSelected = kvpInverter.Value;
+                XYDataSet dataSet = inverterSelected.dataSet;
 
-                this.CalcultePoints();
-
-                // fill the combobox wih years
-                foreach (KeyValuePair<int, double[,]> kvp in data)
+                double[] x = dataSet["EnergyPerHalfHour"].x;
+                double[] y = dataSet["EnergyPerHalfHour"].y;
+                int year = DateTime.FromOADate(dataSet["EnergyPerHalfHour"].Xmin).Year;
+                if (!data.ContainsKey(year))
                 {
-                    this.comboBox.Items.Add(kvp.Key.ToString());
+                    data.Add(year, new double[52, 48]);
                 }
-                this.comboBox.SelectedIndex = 0;
-
-
-                //setup the chart
-                ChartArea chartArea = plot.ChartAreas[0];
-                chartArea.AxisX.Title = "Time of Day";
-
-                for (int i = 0; i < 48; i++)
+                int end = dataSet["EnergyPerHalfHour"].count;
+                for (int index = 0; index < end; index++)
                 {
-                    string labelString = "";
-                    if ((i % 2) == 0) labelString += (i / 2).ToString() + ":00";
-                    CustomLabel t = new CustomLabel(i, i + 1, labelString, 0, LabelMarkStyle.None);
-                    chartArea.AxisX.CustomLabels.Add(t);
+                    DateTime t = DateTime.FromOADate(x[index]);
+                    if (t.Year != year)
+                    {
+                        year = t.Year;
+                        if (!data.ContainsKey(year))
+                        {
+                            data.Add(year, new double[52, 48]);
+                        }
+                    }
+                    int week = (int)(t.DayOfYear / 7);
+                    int hr = t.Hour * 2 + (int)(t.Minute / 30);
+                    data[year][week, hr] += y[index] / 7; // divide by 7 because we add up over a week.
                 }
-                chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
-                chartArea.AxisX.Minimum = 0;
-                chartArea.AxisX.Maximum = 48;
-                chartArea.AxisX.Interval = 2;
-
-                chartArea.AxisY.Title = "Average kWh";
-                chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
-                chartArea.AxisY.Minimum = 0;
-
-                chartArea.BackColor = Color.FloralWhite; //AntiqueWhite //LightSkyBlue
-                chartArea.BackSecondaryColor = Color.White;
-                chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
-                chartArea.BorderColor = Color.Blue;
-                chartArea.BorderDashStyle = ChartDashStyle.Solid;
-                chartArea.BorderWidth = 1;
-                chartArea.ShadowOffset = 2;
-
-                // Enable 3D charts
-                chartArea.Area3DStyle.Enable3D = true;
-                chartArea.Area3DStyle.Perspective = 2;
-
-                LoadYearDataInChart(data.ElementAtOrDefault(0).Key);
-                DrawChart(0);
             }
+
+            // fill the combobox wih years
+            foreach (KeyValuePair<int, double[,]> kvp in data)
+            {
+                this.comboBox.Items.Add(kvp.Key.ToString());
+            }
+            this.comboBox.SelectedIndex = 0;
+
+
+            //setup the chart
+            ChartArea chartArea = plot.ChartAreas[0];
+            chartArea.AxisX.Title = "Time of Day";
+
+            for (int i = 0; i < 48; i++)
+            {
+                string labelString = "";
+                if ((i % 2) == 0) labelString += (i / 2).ToString() + ":00";
+                CustomLabel t = new CustomLabel(i, i + 1, labelString, 0, LabelMarkStyle.None);
+                chartArea.AxisX.CustomLabels.Add(t);
+            }
+            chartArea.AxisX.MajorGrid.LineColor = Color.LightBlue;
+            chartArea.AxisX.Minimum = 0;
+            chartArea.AxisX.Maximum = 48;
+            chartArea.AxisX.Interval = 2;
+
+            chartArea.AxisY.Title = "Average kWh";
+            chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
+            chartArea.AxisY.Minimum = 0;
+
+            chartArea.BackColor = Color.FloralWhite; //AntiqueWhite //LightSkyBlue
+            chartArea.BackSecondaryColor = Color.White;
+            chartArea.BackGradientStyle = GradientStyle.HorizontalCenter;
+            chartArea.BorderColor = Color.Blue;
+            chartArea.BorderDashStyle = ChartDashStyle.Solid;
+            chartArea.BorderWidth = 1;
+            chartArea.ShadowOffset = 2;
+
+            // Enable 3D charts
+            chartArea.Area3DStyle.Enable3D = true;
+            chartArea.Area3DStyle.Perspective = 2;
+
+            LoadYearDataInChart(data.ElementAtOrDefault(0).Key);
+            DrawChart(0);
+            
         }
 
         public void LoadYearDataInChart(int year)
