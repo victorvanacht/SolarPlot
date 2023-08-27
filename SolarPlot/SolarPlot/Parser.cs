@@ -287,20 +287,26 @@ namespace SolarPlot
                             {
                                 string[] line = file.ReadLine().Split(',');
 
-                                Int64 position = file.BaseStream.Position;
-                                this.form.SetProgress((int)((position * 100) / fileSize));
-
-                                DateTime dateTime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
-                                if (dateTime > previousDateTime) // make sure we only have ascending date times
+                                if (line.Length > 0)
                                 {
-                                    for (int columnIndex = 0; columnIndex < line.Length; columnIndex++)
+                                    if (line[0].Length > 0)
                                     {
-                                        if (columnGraphTranslator.ContainsKey(columnIndex))
+                                        Int64 position = file.BaseStream.Position;
+                                        this.form.SetProgress((int)((position * 100) / fileSize));
+
+                                        DateTime dateTime = DateTime.Parse(line[columnIndexTimeStamp], CultureInfo.InvariantCulture);
+                                        if (dateTime > previousDateTime) // make sure we only have ascending date times
                                         {
-                                            columnGraphTranslator[columnIndex] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[columnIndex], CultureInfo.InvariantCulture));
+                                            for (int columnIndex = 0; columnIndex < line.Length; columnIndex++)
+                                            {
+                                                if (columnGraphTranslator.ContainsKey(columnIndex))
+                                                {
+                                                    columnGraphTranslator[columnIndex] += new XYDataSet.XYPoint<double>(dateTime, double.Parse(line[columnIndex], CultureInfo.InvariantCulture));
+                                                }
+                                            }
+                                            previousDateTime = dateTime;
                                         }
                                     }
-                                    previousDateTime = dateTime;
                                 }
                             }
 
