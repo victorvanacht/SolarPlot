@@ -18,7 +18,6 @@ namespace SolarPlot
         System.Windows.Forms.DataVisualization.Charting.Chart plot;
 
         private double[,] data;
-        private int count;
         private int firstYear;
         private int lastYear;
 
@@ -27,12 +26,31 @@ namespace SolarPlot
         // ported to C# by OpenAI's ChatGPT
         // a few tiny manual changes to get ChatGPT's work compiling & running
 
-        public DecadePlot(XYDataSet dataSet, System.Windows.Forms.DataVisualization.Charting.Chart plot)
+        public DecadePlot(Dictionary<string, Inverter> inverter, System.Windows.Forms.DataVisualization.Charting.Chart plot)
         {
-            this.dataSet = dataSet;
             this.plot = plot;
 
-            this.CalcultePoints();
+            // Calculate data
+            data = new double[100, 52]; // 100 years
+            foreach (KeyValuePair<string, Inverter> kvpInverter in inverter)
+            {
+                Inverter inverterSelected = kvpInverter.Value;
+                XYDataSet dataSet = inverterSelected.dataSet;
+
+                double[] x = dataSet["EnergyPerHalfHour"].x;
+                double[] y = dataSet["EnergyPerHalfHour"].y;
+
+                this.firstYear = DateTime.FromOADate(dataSet["EnergyPerHalfHour"].Xmin).Year;
+                this.lastYear = DateTime.FromOADate(dataSet["EnergyPerHalfHour"].Xmax).Year;
+                int end = dataSet["EnergyPerHalfHour"].count;
+                for (int index = 0; index<end; index++)
+                {
+                    DateTime t = DateTime.FromOADate(x[index]);
+                    if ((t.Year - this.firstYear) >= 100) break;
+                    int week = (int)(t.DayOfYear / 7);
+                    data[t.Year - this.firstYear, week] += y[index] /7; // divide by 7 because we want it per day.
+                }
+            }
 
             //setup the chart
             ChartArea chartArea = plot.ChartAreas[0];
@@ -48,7 +66,7 @@ namespace SolarPlot
             chartArea.AxisX.Maximum = 52;
             chartArea.AxisX.Interval = 2;
 
-            chartArea.AxisY.Title = "Average kWh";
+            chartArea.AxisY.Title = "Average kWh per day";
             chartArea.AxisY.MajorGrid.LineColor = Color.LightGray;
             chartArea.AxisY.Minimum = 0;
 
@@ -95,26 +113,6 @@ namespace SolarPlot
         {
 
             plot.ChartAreas[0].Area3DStyle.Rotation = angle;
-        }
-
-
-        private void CalcultePoints()
-        {
-            data = new double[100,52]; // 100 years
-
-            double[] x = this.dataSet["EnergyPerHalfHour"].x;
-            double[] y = this.dataSet["EnergyPerHalfHour"].y;
-
-            this.firstYear = DateTime.FromOADate(this.dataSet["EnergyPerHalfHour"].Xmin).Year;
-            this.lastYear = DateTime.FromOADate(this.dataSet["EnergyPerHalfHour"].Xmax).Year;
-            int end = this.dataSet["EnergyPerHalfHour"].count;
-            for (int index =0; index< end; index ++)
-            {
-                DateTime t = DateTime.FromOADate(x[index]);
-                if ((t.Year - this.firstYear) >= 100) break;
-                int week = (int)(t.DayOfYear / 7);
-                data[t.Year-this.firstYear, week] += y[index];
-            }
         }
     }
 }

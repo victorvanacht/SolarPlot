@@ -103,7 +103,7 @@ namespace SolarPlot
                 this.comboBoxDayPlotInverterSelection.SelectedIndex = 0;
 
                 this.yearPlot = new YearPlot(this.inverter, this.PlotYear, this.YearComboBoxSelectYear);
-                //this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
+                this.decadePlot = new DecadePlot(this.inverter, this.PlotDecade);
             }
         }
 
