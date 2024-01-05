@@ -31,7 +31,7 @@ namespace SolarPlot
             this.plot = plot;
 
             // Calculate data
-            data = new double[100, 52]; // 100 years
+            data = new double[100, 53]; // 100 years
             foreach (KeyValuePair<string, Inverter> kvpInverter in inverter)
             {
                 Inverter inverterSelected = kvpInverter.Value;

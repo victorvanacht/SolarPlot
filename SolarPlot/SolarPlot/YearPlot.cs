@@ -53,7 +53,7 @@ namespace SolarPlot
                 int year = DateTime.FromOADate(dataSet["EnergyPerHalfHour"].Xmin).Year;
                 if (!data.ContainsKey(year))
                 {
-                    data.Add(year, new double[52, 48]);
+                    data.Add(year, new double[53, 48]);
                 }
                 int end = dataSet["EnergyPerHalfHour"].count;
                 for (int index = 0; index < end; index++)
@@ -64,7 +64,7 @@ namespace SolarPlot
                         year = t.Year;
                         if (!data.ContainsKey(year))
                         {
-                            data.Add(year, new double[52, 48]);
+                            data.Add(year, new double[53, 48]);
                         }
                     }
                     int week = (int)(t.DayOfYear / 7);

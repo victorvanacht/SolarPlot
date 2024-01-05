@@ -109,6 +109,7 @@
             // 
             // comboBoxDayPlotLineSelection
             // 
+            this.comboBoxDayPlotLineSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDayPlotLineSelection.FormattingEnabled = true;
             this.comboBoxDayPlotLineSelection.Location = new System.Drawing.Point(785, 433);
             this.comboBoxDayPlotLineSelection.Name = "comboBoxDayPlotLineSelection";
